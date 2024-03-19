@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DiplomaApplication</string>
+    <string name="web_client_id">949341414904-qgv08qjm0fs6bod7fpiou63lo07mg3qb.apps.googleusercontent.com</string>
+    <string name="menu_home">Главная</string>
+    <string name="title_activity_main_page">MainPage</string>
+    <string name="title_home">Главная</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Уведомление</string>
+    <string name="title_profile">Профиль</string>
+</resources>
