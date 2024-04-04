@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
 import com.example.diplomaapplication.databinding.ActivityForgotPasswordBinding
+import com.example.diplomaapplication.views.auth.LoginFragment
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -28,7 +29,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
             if(checkEmail()) {
                 auth.sendPasswordResetEmail(email).addOnCompleteListener {
                     Toast.makeText(this, "Отправлено на почту", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, SignInActivity::class.java)
+                    val intent = Intent(this, LoginFragment::class.java)
                     startActivity(intent)
 
                     finish()

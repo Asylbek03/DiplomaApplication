@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewTotalMedicines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Всего принято лекарств: "
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="День"
+            android:layout_weight="1"
+            android:onClick="showDayGraph" />
+
+        <Button
+            android:id="@+id/buttonWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Неделя"
+            android:layout_weight="1"
+            android:onClick="showWeekGraph" />
+
+        <Button
+            android:id="@+id/buttonMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Месяц"
+            android:layout_weight="1"
+            android:onClick="showMonthGraph" />
+
+        <Button
+            android:id="@+id/buttonYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Год"
+            android:layout_weight="1"
+            android:onClick="showYearGraph" />
+
+    </LinearLayout>
+
+</LinearLayout>

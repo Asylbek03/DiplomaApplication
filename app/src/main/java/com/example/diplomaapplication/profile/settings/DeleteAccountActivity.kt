@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.diplomaapplication.databinding.ActivityDeleteAccountBinding
-import com.example.diplomaapplication.signIn.SignInActivity
+import com.example.diplomaapplication.views.auth.LoginFragment
 import com.google.firebase.auth.FirebaseAuth
 
 class DeleteAccountActivity : AppCompatActivity() {
@@ -29,7 +29,7 @@ class DeleteAccountActivity : AppCompatActivity() {
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 Toast.makeText(this, "Аккаунт удален!", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this, SignInActivity::class.java)
+                                val intent = Intent(this, LoginFragment::class.java)
                                 startActivity(intent)
                                 finish()
                             } else {

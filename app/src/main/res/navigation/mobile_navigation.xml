@@ -3,23 +3,206 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/welcomeAuthFragment">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.diplomaapplication.ui.home.HomeFragment"
+        android:id="@+id/fragment_medicines"
+        android:name="com.example.diplomaapplication.ui.medicines.MedicinesFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_medicines">
+        <action
+            android:id="@+id/action_medicinesFragment_to_addMedicineFragment"
+            app:destination="@id/addMedicineFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_medicinesFragment_to_showMedicinesStatistic"
+            app:destination="@id/showMedicinesStatistic"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/addMedicineFragment"
+        android:name="com.example.diplomaapplication.views.medicines.AddMedicineFragment"
+        android:label="fragment_add_medicine"
+        tools:layout="@layout/fragment_add_medicine" />
+    <fragment
+        android:id="@+id/showMedicinesStatistic"
+        android:name="com.example.diplomaapplication.views.medicines.ShowMedicinesStatistic"
+        android:label="fragment_add_medicine"
+        tools:layout="@layout/fragment_show_medicines_statistic" />
+    <fragment
+        android:id="@+id/clearMedicine"
+        android:name="com.example.diplomaapplication.views.medicines.ClearMedicine"
+        android:label="fragment_add_medicine"
+        tools:layout="@layout/fragment_show_medicines_statistic" />
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.diplomaapplication.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_changeBio"
+            app:destination="@id/changeBio"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_clearMedicine"
+            app:destination="@id/clearMedicine"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_changeMedicineBranch"
+            app:destination="@id/changeMedicineBranch"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_changeName"
+            app:destination="@id/changeName"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_changePassword"
+            app:destination="@id/changePassword"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_changeWorkTime"
+            app:destination="@id/changeWorkTime"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_profile_to_chooseAvatarFragment"
+            app:destination="@id/chooseAvatarFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.diplomaapplication.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/chatFragment"
+        android:name="com.example.diplomaapplication.ui.chat.ChatsFragment"
+        android:label="@string/title_chats"
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_medicinesFragment"
+            app:destination="@id/fragment_medicines"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/mobile_navigation"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.diplomaapplication.views.auth.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.diplomaapplication.views.auth.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/welcomeAuthFragment"
+        android:name="com.example.diplomaapplication.views.WelcomeAuthFragment"
+        android:label="fragment_welcome_auth"
+        tools:layout="@layout/fragment_welcome_auth">
+        <action
+            android:id="@+id/action_welcomeAuthFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_welcomeAuthFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseAvatarFragment"
+        android:name="com.example.diplomaapplication.views.profile.user_config.ChooseAvatarFragment"
+        android:label="fragment_choose_avatar"
+        tools:layout="@layout/fragment_choose_avatar" />
+    <fragment
+        android:id="@+id/changeBio"
+        android:name="com.example.diplomaapplication.profile.settings.ChangeBio"
+        android:label="fragment_change_bio"
+        tools:layout="@layout/fragment_change_bio" />
+    <fragment
+        android:id="@+id/changeMedicineBranch"
+        android:name="com.example.diplomaapplication.views.profile.user_config.ChangeMedicineBranch"
+        android:label="fragment_change_medicine_branch"
+        tools:layout="@layout/fragment_change_medicine_branch" />
+    <fragment
+        android:id="@+id/changeName"
+        android:name="com.example.diplomaapplication.views.profile.user_config.ChangeName"
+        android:label="fragment_change_name"
+        tools:layout="@layout/fragment_change_name" />
+    <fragment
+        android:id="@+id/changePassword"
+        android:name="com.example.diplomaapplication.views.profile.user_config.ChangePassword"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/changeWorkTime"
+        android:name="com.example.diplomaapplication.profile.settings.ChangeWorkTime"
+        android:label="SourcesFragment"
+        tools:layout="@layout/fragment_change_work_time" />
+    <fragment
+
+        android:id="@+id/allDoctorsFragment"
+        android:name="com.example.diplomaapplication.views.doctor.AllDoctorsFragment"
+        android:label="AllDoctorsFragment"
+        tools:layout="@layout/fragment_all_doctors" >
+        <action
+            android:id="@+id/action_allDoctorsFragment_to_reserveMessageFragment"
+            app:destination="@id/reserveMessageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_allDoctorsFragment_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/reserveMessageFragment"
+        android:name="com.example.diplomaapplication.views.doctor.ReserveMessageFragment"
+        android:label="fragment_reserve_message"
+        tools:layout="@layout/fragment_reserve_message" >
+        <action
+            android:id="@+id/action_reserveMessageFragment_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 </navigation>
