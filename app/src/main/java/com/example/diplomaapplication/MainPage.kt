@@ -17,7 +17,6 @@ import com.example.diplomaapplication.analytics.AnalyticsHelper
 import com.example.diplomaapplication.authentication.Authentication
 import com.example.diplomaapplication.databases.medicines_database.MedicinesDatabase
 import com.example.diplomaapplication.databinding.ActivityMainPageBinding
-import com.example.diplomaapplication.medicine_alarm_receiver.MedicineAlarmReceiver.Companion.MEDICATION_NOTIFICATION
 import com.example.diplomaapplication.model.views.CurrentUserViewModel
 import com.example.diplomaapplication.model.views.MainActivityViewModel
 import javax.inject.Inject
@@ -49,7 +48,6 @@ class MainPage : AppCompatActivity() {
         navView.setupWithNavController(navController)
         handleUserAuthStateChanged()
         setBottomNavigationVisibility()
-        parseIntent(intent)
     }
 
     private fun handleUserAuthStateChanged() {
@@ -121,11 +119,6 @@ class MainPage : AppCompatActivity() {
         }
     }
 
-    private fun parseIntent(intent: Intent?) {
-        val isMedicationNotification = intent?.getBooleanExtra(MEDICATION_NOTIFICATION, false) ?: false
-        if (isMedicationNotification) {
-            analyticsHelper.logEvent(AnalyticsEvents.REMINDER_NOTIFICATION_CLICKED)
-        }
-    }
+
 
 }

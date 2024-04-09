@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DiplomaApplication</string>
     <string name="web_client_id">949341414904-qgv08qjm0fs6bod7fpiou63lo07mg3qb.apps.googleusercontent.com</string>
+    <string name="google_maps_key">AIzaSyAEkbsprYryRT_Kpb3m0cdGada5kmR2m8o</string>
     <string name="menu_home">Главная</string>
     <string name="title_activity_main_page">Главная</string>
     <string name="title_home">Главная</string>
@@ -57,6 +58,19 @@
     <string name="click_for_choose">Нажмите чтобы выбрать</string>
     <string name="show_statistics">!</string>
     <string name="clear_medicine">Очистить лекарства</string>
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="year">Год</string>
+    <string name="map">Карта</string>
+    <string name="search_place">Найти место</string>
+    <string name="intake_timing">Время потребление</string>
+    <string name="custom_description_hint">Описание</string>
+    <string name="title_chat">Чат</string>
+    <string name="title_statistics">Статистика</string>
+    <string name="title_add_medicines">Добавить лекарство</string>
+    <string name="title_map">Карта</string>
+    <string name="title_settings">Настройка</string>
 
     <plurals name="numberOfSongsAvailable">
         <item quantity="one">%d неделя</item>

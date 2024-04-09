@@ -20,7 +20,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="20dp"
         android:layout_gravity="center"
-        android:src="@drawable/user_avatar_1"/>
+        android:src="@drawable/avatar_user_1"/>
 
     <LinearLayout
         android:layout_width="0dp"

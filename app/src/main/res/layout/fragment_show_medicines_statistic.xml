@@ -1,62 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/beige"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textViewTotalMedicines"
+    <ImageView
+        android:id="@+id/showStatisticBackButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Всего принято лекарств: "
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="26dp"
+        android:src="@drawable/ic_back_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
+    <Button
+        android:id="@+id/btn_day"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded10_bg"
+        android:backgroundTint="@color/blue"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/day" />
+
+    <Button
+        android:id="@+id/btn_week"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded10_bg"
+        android:backgroundTint="@color/blue"
+        android:layout_alignTop="@+id/btn_day"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/btn_day"
+        android:text="@string/week" />
+
+    <Button
+        android:id="@+id/btn_month"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/month"
+        android:background="@drawable/rounded10_bg"
+        android:backgroundTint="@color/blue"
+        android:layout_alignTop="@+id/btn_week"
+        android:layout_toEndOf="@+id/btn_week"
+        android:layout_marginStart="15dp" />
+
+    <Button
+        android:id="@+id/btn_year"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/year"
+        android:layout_alignTop="@+id/btn_month"
+        android:background="@drawable/rounded10_bg"
+        android:backgroundTint="@color/blue"
+        android:layout_toEndOf="@+id/btn_month"
+        android:layout_marginStart="15dp" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bar_chart"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="580dp"
+        android:layout_below="@+id/btn_day"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/overallTablets"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/buttonDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="День"
-            android:layout_weight="1"
-            android:onClick="showDayGraph" />
-
-        <Button
-            android:id="@+id/buttonWeek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Неделя"
-            android:layout_weight="1"
-            android:onClick="showWeekGraph" />
-
-        <Button
-            android:id="@+id/buttonMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Месяц"
-            android:layout_weight="1"
-            android:onClick="showMonthGraph" />
-
-        <Button
-            android:id="@+id/buttonYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Год"
-            android:layout_weight="1"
-            android:onClick="showYearGraph" />
-
-    </LinearLayout>
-
-</LinearLayout>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="63dp"
+        android:layout_marginBottom="25dp"
+        android:text=" "
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</RelativeLayout>

@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.diplomaapplication.R
 import com.example.diplomaapplication.authentication.Authentication
 import com.example.diplomaapplication.databases.firestore_database.FireStoreDatabase
@@ -23,12 +22,12 @@ import com.example.diplomaapplication.databases.medicines_database.Medicine
 import com.example.diplomaapplication.databinding.FragmentMedicinesBinding
 import com.example.diplomaapplication.helpers.Helpers
 import com.example.diplomaapplication.helpers.MedicinesCalendar
-import com.example.diplomaapplication.medicine_alarm_receiver.MedicineAlarmReceiver
+import com.example.diplomaapplication.notification.MedicineAlarmReceiver
 import com.example.diplomaapplication.model.CalendarDay
 import com.example.diplomaapplication.model.User
 import com.example.diplomaapplication.model.views.CurrentUserViewModel
-import com.example.diplomaapplication.recycler_views.CalendarAdapter
-import com.example.diplomaapplication.recycler_views.MedicinesRecyclerViewAdapter
+import com.example.diplomaapplication.recycler_views.adapter.CalendarAdapter
+import com.example.diplomaapplication.recycler_views.adapter.MedicinesRecyclerViewAdapter
 import com.example.diplomaapplication.views.medicines.DeleteMedicineDialog
 import com.example.diplomaapplication.views.medicines.DeleteMedicineInterface
 import com.example.diplomaapplication.views.medicines.MedicinesArrayListComparator
@@ -230,7 +229,6 @@ class MedicinesFragment : Fragment(), DeleteMedicineInterface, GetCurrentUserInt
 
     override fun onGetCurrentUser(user: User) {
         try{
-            //change bottom nav item text
             if(user.isDoctor)
                 requireActivity().findViewById<BottomNavigationView>(R.id.nav_host_fragment_activity_main_page).menu.getItem(1).title = "Patients"
             else

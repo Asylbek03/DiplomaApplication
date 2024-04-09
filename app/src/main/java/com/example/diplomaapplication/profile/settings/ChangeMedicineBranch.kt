@@ -32,10 +32,8 @@ class ChangeMedicineBranch : Fragment(), DatabaseError {
         setupDoctorsTypesAutoCompleteTextView()
     }
 
-    //setup Navigation
     private fun setupNavigation() = binding.changeMedicineBranchBackButton.setOnClickListener { requireActivity().onBackPressed() }
 
-    //------------------------| Setup auto complete text view with doctors types |-------------------------
     private fun setupDoctorsTypesAutoCompleteTextView(){
         val currentUserViewModel : CurrentUserViewModel = ViewModelProvider(requireActivity()).get(
             CurrentUserViewModel::class.java)
@@ -52,12 +50,10 @@ class ChangeMedicineBranch : Fragment(), DatabaseError {
                 binding.newMedicineBranchACTV.showDropDown()
             }
 
-            //change medicine branch of user
             binding.newMedicineBranchACTV.setOnItemClickListener { _, _, i, _ ->
                 user.medicineBranch = binding.newMedicineBranchACTV.adapter.getItem(i).toString()
             }
 
-            //save new user branch into database
             binding.saveNewMedicineBranchButton.setOnClickListener {
                 FireStoreDatabase().insertUserToDatabase(user,requireView(),this)
                 requireActivity().onBackPressed()
@@ -67,9 +63,6 @@ class ChangeMedicineBranch : Fragment(), DatabaseError {
     }
 
 
-    //==========================================================================================================
-
-    //handle error
     override fun errorHandled(errorMessage: String, view: View) {
         Helpers().showSnackBar(errorMessage,requireView())
     }

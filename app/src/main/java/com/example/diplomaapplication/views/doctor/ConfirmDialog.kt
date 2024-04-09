@@ -9,7 +9,6 @@ import com.example.diplomaapplication.model.Request
 class ConfirmDialog(private val title: String, private val message: String, private val isDoctor:Boolean, private val request: Request, private val listener: ChatInterface) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        //show alert dialog with 2 options - cancel and delete
         return activity?.let {
             AlertDialog.Builder(it).setTitle(title).setMessage(message)
                 .setPositiveButton(

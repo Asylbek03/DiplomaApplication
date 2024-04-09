@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,13 +16,12 @@ import com.example.diplomaapplication.R
 import com.example.diplomaapplication.databases.firestore_database.DatabaseError
 import com.example.diplomaapplication.databases.firestore_database.FireStoreDatabase
 import com.example.diplomaapplication.databinding.FragmentChatBinding
-import com.example.diplomaapplication.databinding.FragmentProfileBinding
 import com.example.diplomaapplication.helpers.Helpers
 import com.example.diplomaapplication.model.Message
 import com.example.diplomaapplication.model.Request
 import com.example.diplomaapplication.model.views.CurrentUserViewModel
 import com.example.diplomaapplication.model.views.RequestViewModel
-import com.example.diplomaapplication.recycler_views.MessagesRecyclerViewAdapter
+import com.example.diplomaapplication.recycler_views.adapter.MessagesRecyclerViewAdapter
 import com.example.diplomaapplication.views.doctor.ChatInterface
 import com.example.diplomaapplication.views.doctor.ConfirmDialog
 

@@ -207,7 +207,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="12dp"
             android:background="@drawable/circle"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/blue"
             android:padding="10dp"
             android:src="@drawable/ic_time"
             app:layout_constraintBottom_toBottomOf="@+id/timeTextInput"
@@ -279,13 +279,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/open_sans_semibold"
             android:text="@string/start_date"
             android:textColor="@color/gray"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toBottomOf="@+id/medicineFormRecyclerView" />
+            app:layout_constraintTop_toBottomOf="@+id/customDescriptionEditText" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/medicineFormRecyclerView"
@@ -297,6 +297,56 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:text="@string/intake_timing"
+            android:textColor="@color/gray"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/medicineFormRecyclerView" />
+
+        <Spinner
+            android:id="@+id/intakeTimingSpinner"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_stroke_bg"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_weight="0.95"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+        <EditText
+            android:id="@+id/customDescriptionEditText"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_stroke_bg"
+            android:fontFamily="@font/open_sans_regular"
+            android:hint="@string/custom_description_hint"
+            android:importantForAutofill="no"
+            android:textColorHint="@color/black"
+            android:paddingStart="10dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="17dp"
+            android:textColor="@color/darkGray"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintHorizontal_weight="0.95"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/intakeTimingSpinner" />
 
         <TextView
             android:id="@+id/dateTextInput"
@@ -329,7 +379,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
             android:background="@drawable/circle"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/blue"
             android:padding="10dp"
             android:src="@drawable/ic_calendar"
             app:layout_constraintBottom_toBottomOf="@+id/dateTextInput"
@@ -347,7 +397,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/rounded10_bg"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/blue"
             android:fontFamily="@font/open_sans_semibold"
             android:paddingTop="17dp"
             android:paddingBottom="17dp"

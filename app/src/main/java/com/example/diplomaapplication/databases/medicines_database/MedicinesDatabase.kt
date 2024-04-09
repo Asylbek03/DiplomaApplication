@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Medicine::class], version = 1)
+@Database(entities = [Medicine::class], version = 4)
 abstract class MedicinesDatabase : RoomDatabase() {
 
     abstract fun medicineDao(): MedicineDao
@@ -21,13 +21,16 @@ abstract class MedicinesDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context): MedicinesDatabase {
+            fun destroyInstance() {
+                instance = null
+            }
             return Room.databaseBuilder(
                 context.applicationContext,
                 MedicinesDatabase::class.java,
                 "medicines_database"
-            ).build()
-
+            ).fallbackToDestructiveMigration().build()
         }
+
 
         fun clearDatabase(context: Context) {
             getDatabase(context).clearAllTables()

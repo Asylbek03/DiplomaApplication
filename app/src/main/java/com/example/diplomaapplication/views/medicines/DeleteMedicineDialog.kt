@@ -9,15 +9,14 @@ import com.example.diplomaapplication.databases.medicines_database.Medicine
 class DeleteMedicineDialog(private val medicine: Medicine, private val listener:DeleteMedicineInterface) : DialogFragment(){
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        //show alert dialog with 2 options - cancel and delete
         return activity?.let {
-            AlertDialog.Builder(it).setMessage("Are you sure to delete this medicine ?")
-                .setPositiveButton("Delete"
+            AlertDialog.Builder(it).setMessage("Вы хотите удалить данное лекарство?")
+                .setPositiveButton("Удалить"
                 ) { dialog, _ ->
                     listener.deleteMedicine(medicine)
                     dialog.cancel()
                 }
-                .setNegativeButton("Cancel"
+                .setNegativeButton("Отмена"
                 ) { dialog, _ ->
                     dialog.cancel()
                 }.create()

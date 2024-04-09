@@ -36,7 +36,7 @@ class ChangeWorkTime : Fragment(), DatabaseError {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerTimeViewModel = ViewModelProvider(requireActivity()).get(RegisterTimeViewModel::class.java)
-        user = User(System.currentTimeMillis().toString(),"Name","A doctor", R.drawable.doctor_avatar_1, true, " " , System.currentTimeMillis(), System.currentTimeMillis(),0.0f)
+        user = User(System.currentTimeMillis().toString(),"Name","A doctor", R.drawable.avatar_doctor_1, true, " " , System.currentTimeMillis(), System.currentTimeMillis(),0.0f)
 
         currentUserViewModel = ViewModelProvider(requireActivity()).get(CurrentUserViewModel::class.java)
         binding.startTimeInput.setOnClickListener {

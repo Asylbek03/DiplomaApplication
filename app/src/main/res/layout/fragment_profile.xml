@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue_B4D4FF"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:contentDescription="avatar"
-            android:src="@drawable/doctor_avatar_1" />
+            android:src="@drawable/avatar_doctor_1" />
 
         <TextView
             android:id="@+id/currentUserName"
@@ -28,9 +29,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
+            android:textStyle="bold"
             android:fontFamily="@font/open_sans_bold"
             android:text=" "
-            android:textColor="@color/black"
+            android:textColor="@color/blue"
             android:textSize="26sp" />
 
         <TextView
@@ -41,7 +43,7 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_regular"
             android:text=" "
-            android:textColor="@color/gray"
+            android:textColor="@color/blue"
             android:textSize="18sp" />
         <TextView
             android:id="@+id/tvWorkTime"
@@ -51,7 +53,7 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_regular"
             android:text=" "
-            android:textColor="@color/gray"
+            android:textColor="@color/blue"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -67,7 +69,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="#673AB7"
+                android:backgroundTint="@color/blue"
                 android:padding="7dp"
                 android:src="@drawable/ic_profile"
                 app:tint="@color/white" />
@@ -81,7 +83,8 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/change_name"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
                 android:textSize="18sp"
                 tools:ignore="RtlSymmetry" />
 
@@ -117,9 +120,9 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="#17E500"
+                android:backgroundTint="@color/blue"
                 android:padding="7dp"
-                android:src="@drawable/ic_flower"
+                android:src="@drawable/icon_bio"
                 app:tint="@color/white" />
 
 
@@ -131,7 +134,8 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/change_bio"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
                 android:textSize="18sp"
                 tools:ignore="RtlSymmetry" />
 
@@ -167,9 +171,9 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="#FF00AA"
+                android:backgroundTint="@color/blue"
                 android:padding="7dp"
-                android:src="@drawable/ic_face"
+                android:src="@drawable/icon_avatar"
                 app:tint="@color/white" />
 
 
@@ -181,8 +185,9 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/change_avatar"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
@@ -217,9 +222,9 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="#FF0000"
+                android:backgroundTint="@color/blue"
                 android:padding="8dp"
-                android:src="@drawable/ic_doctors"
+                android:src="@drawable/icon_doctors"
                 app:tint="@color/white" />
 
 
@@ -231,7 +236,8 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/change_medicine_branch"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
                 android:textSize="18sp"
                 tools:ignore="RtlSymmetry" />
 
@@ -268,9 +274,9 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/blue"
                 android:padding="10dp"
-                android:src="@drawable/ic_lock"
+                android:src="@drawable/icon_lock"
                 app:tint="@color/white" />
 
 
@@ -282,7 +288,8 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/change_password"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
                 android:textSize="18sp"
                 tools:ignore="RtlSymmetry" />
 
@@ -317,9 +324,9 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="#003F8E"
+                android:backgroundTint="@color/blue"
                 android:padding="7dp"
-                android:src="@drawable/ic_sources"
+                android:src="@drawable/icon_time"
                 app:tint="@color/white" />
 
 
@@ -331,8 +338,9 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/work_time"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
@@ -366,9 +374,9 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="#FFB300"
+                android:backgroundTint="@color/blue"
                 android:padding="8dp"
-                android:src="@drawable/ic_logout"
+                android:src="@drawable/icon_clear"
                 app:tint="@color/white" />
 
 
@@ -380,8 +388,9 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/clear_medicine"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
@@ -415,7 +424,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/rounded10_bg"
-                android:backgroundTint="#FFB300"
+                android:backgroundTint="@color/blue"
                 android:padding="8dp"
                 android:src="@drawable/ic_logout"
                 app:tint="@color/white" />
@@ -429,7 +438,8 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:paddingStart="20dp"
                 android:text="@string/log_out"
-                android:textColor="@color/gray"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
                 android:textSize="18sp"
                 tools:ignore="RtlSymmetry" />
 

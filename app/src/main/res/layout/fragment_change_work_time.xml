@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightBlue"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,15 +43,15 @@
             android:id="@+id/timeIntervalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/choose_your_work_interval"
-            android:textColor="@color/lightGray"
+            android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintHorizontal_bias="0.434"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+            tools:layout_editor_absoluteY="87dp"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/startTimeInput"
@@ -134,7 +135,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="28dp"
             android:background="@drawable/rounded10_bg"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/blue"
             android:fontFamily="@font/open_sans_regular"
             android:paddingTop="17dp"
             android:paddingBottom="17dp"
@@ -149,19 +150,6 @@
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/startTimeInput"
             app:layout_constraintVertical_bias="0.058" />
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/work_time"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintHorizontal_bias="0.494"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/registerBackButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

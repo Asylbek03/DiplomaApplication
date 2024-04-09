@@ -1,0 +1,49 @@
+package com.example.diplomaapplication.recycler_views.adapter
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.example.diplomaapplication.R
+import com.example.diplomaapplication.model.DoctorTypeCard
+import com.example.diplomaapplication.recycler_views.holder.DoctorsTypesViewHolder
+import com.example.diplomaapplication.views.doctor.AllDoctorsInterface
+
+
+class DoctorTypesRecyclerViewAdapter(private val listOfDoctorsTypes: ArrayList<DoctorTypeCard>, private val listener: AllDoctorsInterface):RecyclerView.Adapter<DoctorsTypesViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DoctorsTypesViewHolder {
+        return DoctorsTypesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.photo_and_desc_card,parent,false))
+    }
+
+    override fun getItemCount(): Int {
+        return listOfDoctorsTypes.size
+    }
+
+    override fun onBindViewHolder(holder: DoctorsTypesViewHolder, position: Int) {
+
+        holder.description.text = listOfDoctorsTypes[holder.adapterPosition].name
+        holder.photo.setImageResource(listOfDoctorsTypes[holder.adapterPosition].photo)
+
+        holder.allBox.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context,if(listOfDoctorsTypes[holder.adapterPosition].isChoose) R.color.colorPrimary else R.color.backgroundLightGray)
+        holder.description.setTextColor(ContextCompat.getColor(holder.itemView.context,if(listOfDoctorsTypes[holder.adapterPosition].isChoose) R.color.white else R.color.darkGray))
+
+        val params: ViewGroup.LayoutParams = holder.allBox.layoutParams
+        params.width = 370
+        params.height = 370
+        holder.allBox.layoutParams = params
+
+        //click on card
+        holder.allBox.setOnClickListener {
+            doctorCardClick(holder.adapterPosition)
+        }
+    }
+
+    private fun doctorCardClick(index:Int){
+        listener.changeType(listOfDoctorsTypes[index].name)
+        listOfDoctorsTypes.forEach { it.isChoose=false }
+        listOfDoctorsTypes[index].isChoose = true
+        notifyDataSetChanged()
+    }
+
+
+}

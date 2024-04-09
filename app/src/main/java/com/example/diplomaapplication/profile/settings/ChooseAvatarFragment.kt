@@ -50,33 +50,29 @@ class ChooseAvatarFragment : Fragment(), DatabaseError {
 
     private fun setupImages() {
 
-        //all avatars image views
         val listOfAvatarsImageViews = arrayListOf<ImageView>(
             binding.avatar1, binding.avatar2, binding.avatar3, binding.avatar4, binding.avatar5, binding.avatar6
         )
 
-        //list of doctors avatars
         val listOfDoctorsImages = arrayListOf<Int>(
-            R.drawable.doctor_avatar_1,
-            R.drawable.doctor_avatar_2,
-            R.drawable.doctor_avatar_3,
-            R.drawable.doctor_avatar_4,
-            R.drawable.doctor_avatar_5,
-            R.drawable.doctor_avatar_6
+            R.drawable.avatar_doctor_1,
+            R.drawable.avatar_doctor_2,
+            R.drawable.avatar_doctor_3,
+            R.drawable.avatar_doctor_4,
+            R.drawable.avatar_doctor_5,
+            R.drawable.avatar_doctor_6
         )
 
-        //list of patients avatars
         val listOfPatientsImages = arrayListOf<Int>(
-            R.drawable.user_avatar_1,
-            R.drawable.user_avatar_2,
-            R.drawable.user_avatar_3,
-            R.drawable.user_avatar_4,
-            R.drawable.user_avatar_5,
-            R.drawable.user_avatar_6
+            R.drawable.avatar_user_1,
+            R.drawable.avatar_user_2,
+            R.drawable.avatar_user_3,
+            R.drawable.avatar_user_4,
+            R.drawable.avatar_user_5,
+            R.drawable.avatar_user_6
         )
 
 
-        //-------------------| get currentUser |--------------------
         currentUserViewModel.getUser().observe(viewLifecycleOwner, Observer { user->
             try{
                 user!!.avatar?.let { binding.chooseAvatar.setImageResource(it) }
@@ -92,17 +88,14 @@ class ChooseAvatarFragment : Fragment(), DatabaseError {
             }catch (ex:Exception){}
 
         })
-        //============================================================
     }
 
-    //-----| save avatar to database|-------
     private fun saveAvatar(user: User){
         user.avatar = chooseAvatarResource
         val db:FireStoreDatabase = FireStoreDatabase()
         db.insertUserToDatabase(user,requireView(),this)
         requireActivity().onBackPressed()
     }
-    //======================================
 
     override fun errorHandled(errorMessage: String, view: View) {
        Helpers().showSnackBar(errorMessage,requireView())

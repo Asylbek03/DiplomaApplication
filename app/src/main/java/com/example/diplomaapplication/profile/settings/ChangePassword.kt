@@ -31,19 +31,16 @@ class ChangePassword : Fragment() {
             changePassword()
         }
 
-        //soft keyboard enter click
         Helpers().keyboardEnterButtonClick(binding.newPasswordInput){binding.saveNewPasswordButton.performClick()}
     }
 
     private fun setupNavigation() = binding.changePasswordBackButton.setOnClickListener { requireActivity().onBackPressed() }
 
-    //------------------------| Change the password |--------------------------
     private fun changePassword(){
         Authentication().changePassword(binding.oldPasswordInput.text.toString(),binding.newPasswordInput.text.toString(),requireView()){
             requireActivity().onBackPressed()
         }
     }
-    //=========================================================================
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

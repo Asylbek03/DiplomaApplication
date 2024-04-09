@@ -12,8 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.SeekBar
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,27 +23,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diplomaapplication.R
 import com.example.diplomaapplication.databases.medicines_database.Medicine
+import com.example.diplomaapplication.databases.medicines_database.MedicineDao
 import com.example.diplomaapplication.databases.medicines_database.MedicinesViewModel
 import com.example.diplomaapplication.databinding.FragmentAddMedicineBinding
 import com.example.diplomaapplication.helpers.Helpers
-import com.example.diplomaapplication.medicine_alarm_receiver.MedicineAlarmReceiver
+import com.example.diplomaapplication.notification.MedicineAlarmReceiver
 import com.example.diplomaapplication.model.MedicineFormCard
 import com.example.diplomaapplication.model.views.DateTimePickerViewModel
-import com.example.diplomaapplication.recycler_views.MedicineFormsRecyclerViewAdapter
-import com.example.diplomaapplication.ui.medicines.MedicinesFragment
+import com.example.diplomaapplication.recycler_views.adapter.MedicineFormsRecyclerViewAdapter
 import com.example.diplomaapplication.views.DatePickerHelper
 import com.example.diplomaapplication.views.TimePickerHelper
 import java.lang.Exception
 import java.util.*
 
-
 class AddMedicineFragment : Fragment(), MedicineFormInterface {
 
     private lateinit var medicine: Medicine
-    private lateinit var medicinesViewModel : MedicinesViewModel
+    private lateinit var medicinesViewModel: MedicinesViewModel
     private lateinit var alarmManager: AlarmManager
+    private lateinit var medicineDao: MedicineDao
     private var _binding: FragmentAddMedicineBinding? = null
     private val binding get() = _binding!!
+    private var requestCodeCounter = 0
+    private lateinit var intakeTimingSpinner: Spinner
+    private lateinit var customDescriptionEditText: EditText
+    private lateinit var intakeTimingAdapter: ArrayAdapter<String>
+    private val units = arrayOf("таблетки", "ml", "mg")
+    private var selectedMedicineType: String = ""
+
+    private val pendingIntentsMap = HashMap<Int, PendingIntent>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentAddMedicineBinding.inflate(inflater, container, false)
         return binding.root
@@ -52,55 +63,61 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
 
         alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        medicinesViewModel =  ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(MedicinesViewModel::class.java)
-        medicine =  Medicine("","3","pills",Calendar.getInstance().timeInMillis,3,"Pills",R.drawable.pills)
+        intakeTimingSpinner = view.findViewById(R.id.intakeTimingSpinner)
+        customDescriptionEditText = view.findViewById(R.id.customDescriptionEditText)
 
+        val intakeTimingOptions = resources.getStringArray(R.array.intake_timing_options)
+        intakeTimingAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, intakeTimingOptions)
+        intakeTimingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        intakeTimingSpinner.adapter = intakeTimingAdapter
+
+        intakeTimingSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedTiming = intakeTimingOptions[position]
+                customDescriptionEditText.setText("Время потребление: $selectedTiming")
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Log.d("ItemSelected", "No timing selected")
+            }
+        }
+
+        medicinesViewModel = ViewModelProvider(this).get(MedicinesViewModel::class.java)
+        medicine = Medicine(""," "," ",Calendar.getInstance().timeInMillis,1,"",false ," "," ", R.drawable.icon_pills)
 
         setupRecyclerView()
-        //onSeekbarChanged()
         setupMedicineType()
         setupDateAndTimePicker()
 
         binding.saveMedicineButton.setOnClickListener {
             insertMedicine()
+            Log.d("MedicineAdd", "Updating medicine ${medicine.id} ")
         }
 
         binding.addMedicineBackButton.setOnClickListener {
             requireActivity().onBackPressed()
-
-//            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.nav_host_fragment_activity_main_page, MedicinesFragment())
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commit()
         }
 
         val durationPicker = binding.durationPicker
         val unitSpinner = binding.unitSpinner
         durationPicker.minValue = 1
         durationPicker.maxValue = 31
-
         durationPicker.value = 1
-        val units = arrayOf("дней", "недель", "месяцев")
+        val units = arrayOf("день", "неделя", "месяц")
         unitSpinner.adapter = ArrayAdapter(requireContext(), R.layout.spinner_list, units)
-
-
-
     }
 
-
-
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         val listOfMedicinesForms = arrayListOf<MedicineFormCard>(
-            MedicineFormCard("Таблетки",R.drawable.pills,true),
-            MedicineFormCard("Капсула",R.drawable.capsule,false),
-            MedicineFormCard("Сироп",R.drawable.syrup,false),
-            MedicineFormCard("Крем",R.drawable.cream,false),
-            MedicineFormCard("Drops",R.drawable.drops,false),
-            MedicineFormCard("Укол",R.drawable.syringe,false)
+            MedicineFormCard("Таблетка", R.drawable.icon_pills, true),
+            MedicineFormCard("Капсула", R.drawable.icon_capsule, false),
+            MedicineFormCard("Сироп", R.drawable.icon_syrup, false),
+            MedicineFormCard("Крем", R.drawable.icon_cream, false),
+            MedicineFormCard("Укол", R.drawable.icon_syringe, false)
         )
 
-        binding.medicineFormRecyclerView.layoutManager = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL,false)
-        binding.medicineFormRecyclerView.adapter = MedicineFormsRecyclerViewAdapter(listOfMedicinesForms,this)
+        binding.medicineFormRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        binding.medicineFormRecyclerView.adapter = MedicineFormsRecyclerViewAdapter(listOfMedicinesForms, this)
     }
 
     override fun changeForm(form: MedicineFormCard) {
@@ -108,10 +125,8 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
         medicine.formImage = form.photo
     }
 
-
-
-    private fun setupMedicineType(){
-        binding.medicineTypeChooser.setAdapter(ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,arrayListOf("таблетки", "ml", "mg")))
+    private fun setupMedicineType() {
+        binding.medicineTypeChooser.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, arrayListOf("таблетки", "ml", "mg")))
         binding.medicineTypeChooser.inputType = 0
         binding.medicineTypeChooser.keyListener = null
         binding.medicineTypeChooser.setOnClickListener {
@@ -119,100 +134,105 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
         }
 
         binding.medicineTypeChooser.setOnItemClickListener { _, _, i, _ ->
-            medicine.type = binding.medicineTypeChooser.adapter.getItem(i).toString()
+            selectedMedicineType = units[i]
         }
 
         val helper: Helpers = Helpers()
-        helper.keyboardEnterButtonClick(binding.amountInputField) {closeKeyboard()}
+        helper.keyboardEnterButtonClick(binding.amountInputField) { closeKeyboard() }
     }
 
-    private fun closeKeyboard(){
-        val imm: InputMethodManager =
-            requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    private fun closeKeyboard() {
+        val imm: InputMethodManager = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
-
-    private fun setupDateAndTimePicker(){
-        (arrayListOf<View>(binding.chooseTimeButton,binding.timeTextInput)).forEach {
-            it.setOnClickListener {
-                val timePickerDialog: TimePickerHelper = TimePickerHelper()
-                timePickerDialog.show(requireActivity().supportFragmentManager, "time_picker")
-            }
-        }
-
-        (arrayListOf<View>(binding.chooseDateButton,binding.dateTextInput)).forEach {
-            it.setOnClickListener {
-                val datePickerDialog: DatePickerHelper = DatePickerHelper()
-                datePickerDialog.show(requireActivity().supportFragmentManager, "date_picker")
-            }
-        }
-
-        val dateTimePickerViewModel : DateTimePickerViewModel = ViewModelProvider(requireActivity()).get(DateTimePickerViewModel::class.java)
+    private fun setupDateAndTimePicker() {
+        val dateTimePickerViewModel: DateTimePickerViewModel = ViewModelProvider(requireActivity()).get(DateTimePickerViewModel::class.java)
         val c = Calendar.getInstance()
         dateTimePickerViewModel.setDate(c.timeInMillis)
         dateTimePickerViewModel.setTime(c.timeInMillis)
-        //=========================================
 
-        dateTimePickerViewModel.getTime().observe(viewLifecycleOwner, Observer { time->
+        binding.chooseTimeButton.setOnClickListener {
+            val timePickerDialog: TimePickerHelper = TimePickerHelper()
+            timePickerDialog.show(requireActivity().supportFragmentManager, "time_picker")
+        }
+        binding.timeTextInput.setOnClickListener {
+            val timePickerDialog: TimePickerHelper = TimePickerHelper()
+            timePickerDialog.show(requireActivity().supportFragmentManager, "time_picker")
+        }
+
+        binding.chooseDateButton.setOnClickListener {
+            val datePickerDialog: DatePickerHelper = DatePickerHelper()
+            datePickerDialog.show(requireActivity().supportFragmentManager, "date_picker")
+        }
+        binding.dateTextInput.setOnClickListener {
+            val datePickerDialog: DatePickerHelper = DatePickerHelper()
+            datePickerDialog.show(requireActivity().supportFragmentManager, "date_picker")
+        }
+
+        dateTimePickerViewModel.getTime().observe(viewLifecycleOwner, Observer { time ->
             val helper = Calendar.getInstance()
             helper.timeInMillis = time
-
-            //set madicine time
-            c.set(Calendar.HOUR,helper.get(Calendar.HOUR))
-            c.set(Calendar.MINUTE,helper.get(Calendar.MINUTE))
-            c.set(Calendar.SECOND,helper.get(Calendar.SECOND))
-
+            c.set(Calendar.HOUR_OF_DAY, helper.get(Calendar.HOUR_OF_DAY))
+            c.set(Calendar.MINUTE, helper.get(Calendar.MINUTE))
+            c.set(Calendar.SECOND, helper.get(Calendar.SECOND))
             medicine.time = c.timeInMillis
             binding.timeTextInput.text = DateFormat.format("HH:mm", helper).toString()
         })
 
-        dateTimePickerViewModel.getDate().observe(viewLifecycleOwner, Observer { date->
+        dateTimePickerViewModel.getDate().observe(viewLifecycleOwner, Observer { date ->
             val helper = Calendar.getInstance()
             helper.timeInMillis = date
-
-            //set madicine date
-            c.set(Calendar.YEAR,helper.get(Calendar.YEAR))
-            c.set(Calendar.MONTH,helper.get(Calendar.MONTH))
-            c.set(Calendar.DAY_OF_MONTH,helper.get(Calendar.DAY_OF_MONTH))
-
+            c.set(Calendar.YEAR, helper.get(Calendar.YEAR))
+            c.set(Calendar.MONTH, helper.get(Calendar.MONTH))
+            c.set(Calendar.DAY_OF_MONTH, helper.get(Calendar.DAY_OF_MONTH))
             medicine.time = c.timeInMillis
             binding.dateTextInput.text = DateFormat.format("dd MMMM yyyy", helper).toString()
         })
     }
 
-
-
-    private fun insertMedicine(){
+    private fun insertMedicine() {
         val helpers: Helpers = Helpers()
+        medicine.name = if (binding.medicineNameInput.text.isNullOrEmpty()) "Medicine" else binding.medicineNameInput.text.toString()
+        medicine.amount = if (binding.amountInputField.text.isNullOrEmpty()) "Blank" else binding.amountInputField.text.toString()
 
-        medicine.name = if(binding.medicineNameInput.text.isNullOrEmpty()) "Medicine" else binding.medicineNameInput.text.toString()
-        medicine.amount = if(binding.amountInputField.text.isNullOrEmpty()) "Blank" else binding.amountInputField.text.toString()
-
-        try{
-            if(medicine.time + 100000 > System.currentTimeMillis()){
-                helpers.showSnackBar("Saved", requireView())
-
+        try {
+            if (medicine.time + 100000 > System.currentTimeMillis()) {
+                helpers.showSnackBar("Сохранено", requireView())
                 val c = Calendar.getInstance()
                 c.timeInMillis = medicine.time
 
-
                 val duration = binding.durationPicker.value
-                val unit = binding.unitSpinner.selectedItemPosition
+                val durationUnit = binding.unitSpinner.selectedItemPosition
+                val durationUnitStr = binding.unitSpinner.selectedItem.toString()
 
-                // Преобразование продолжительности в дни
-                val totalDurationInDays = when (unit) {
-                    0 -> duration // Если выбраны дни, то продолжительность равна выбранному количеству дней
-                    1 -> duration * 7 // Если выбраны недели, то продолжительность в днях равна выбранному количеству недель, умноженному на 7
-                    2 -> duration * 30 // Если выбраны месяцы, то продолжительность в днях равна выбранному количеству месяцев, умноженному на 30
-                    else -> duration // По умолчанию
+                medicine.isTaken = false
+
+                val selectedTimingPosition = intakeTimingSpinner.selectedItemPosition
+                val selectedTiming = intakeTimingAdapter.getItem(selectedTimingPosition)
+                
+
+
+                medicine.type = selectedMedicineType
+
+                val customDescription = customDescriptionEditText.text.toString()
+                medicine.description = customDescription
+
+
+                val totalDurationInDays = when (durationUnit) {
+                    0 -> duration
+                    1 -> duration * 7
+                    2 -> duration * 30
+                    else -> duration
                 }
 
-                 for (i in 1..totalDurationInDays) {
-                    val medicineToSave = Medicine(medicine.name, medicine.amount, medicine.type, c.timeInMillis, medicine.duration, medicine.formName, medicine.formImage)
-                    medicinesViewModel.insertMedicine(medicineToSave)
+                for (i in 1..totalDurationInDays) {
 
-                    // Установка напоминания на текущий день
+
+                    val medicineToSave = Medicine(medicine.name, medicine.amount, medicine.type, c.timeInMillis, medicine.duration,
+                        durationUnitStr.lowercase(Locale.getDefault()), medicine.isTaken, medicine.description,
+                        medicine.formName, medicine.formImage)
+                    medicinesViewModel.insertMedicine(medicineToSave)
                     val intent = Intent(requireActivity().applicationContext, MedicineAlarmReceiver::class.java)
                     intent.apply {
                         putExtra("medicineName", medicine.name)
@@ -220,29 +240,43 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
                         putExtra("medicineType", medicine.type)
                         putExtra("medicineImage", medicine.formImage)
                     }
-                    val alarmIntent = intent.let {
-                        PendingIntent.getBroadcast(requireActivity().applicationContext, medicineToSave.time.toInt(), it,
-                            PendingIntent.FLAG_IMMUTABLE)
-                    }
+
+                    val alarmId = System.currentTimeMillis().toInt()
+
+                    cancelExistingAlarm(alarmManager, intent, alarmId)
+
+                    val alarmIntent = PendingIntent.getBroadcast(requireActivity().applicationContext, alarmId, intent, PendingIntent.FLAG_IMMUTABLE)
+
                     alarmManager.set(AlarmManager.RTC_WAKEUP, medicineToSave.time, alarmIntent)
 
-                    // Переход к следующему дню
+                    pendingIntentsMap[alarmId] = alarmIntent
+
                     c.add(Calendar.DAY_OF_MONTH, 1)
                 }
 
                 requireActivity().onBackPressed()
+            } else {
+                helpers.showSnackBar("Cannot save medicine with a date that has already passed.", requireView())
             }
-            else helpers.showSnackBar("Cannot save medicine which date has already passed",requireView())
-        }catch (ex:Exception){
-            Log.d("TAG",ex.toString())
-            helpers.showSnackBar(ex.message.toString(),requireView())
+        } catch (ex: Exception) {
+            Log.d("TAG", ex.toString())
+            helpers.showSnackBar(ex.message.toString(), requireView())
         }
-
     }
+    private fun getNextRequestCode(): Int {
+        return requestCodeCounter++
+    }
+    private fun cancelExistingAlarm(alarmManager: AlarmManager, intent: Intent, alarmId: Int) {
+        pendingIntentsMap[alarmId]?.let {
+            alarmManager.cancel(it)
+            pendingIntentsMap.remove(alarmId)
+        }
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }

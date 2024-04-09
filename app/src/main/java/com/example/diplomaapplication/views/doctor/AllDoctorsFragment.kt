@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.diplomaapplication.R
 import com.example.diplomaapplication.databases.firestore_database.FireStoreDatabase
 import com.example.diplomaapplication.databases.firestore_database.DatabaseError
-import com.example.diplomaapplication.databinding.FragmentAddMedicineBinding
 import com.example.diplomaapplication.databinding.FragmentAllDoctorsBinding
 import com.example.diplomaapplication.helpers.Helpers
 import com.example.diplomaapplication.model.DoctorTypeCard
@@ -21,9 +20,9 @@ import com.example.diplomaapplication.model.Request
 import com.example.diplomaapplication.model.User
 import com.example.diplomaapplication.model.views.CurrentUserViewModel
 import com.example.diplomaapplication.model.views.RequestViewModel
-import com.example.diplomaapplication.recycler_views.DoctorTypesRecyclerViewAdapter
-import com.example.diplomaapplication.recycler_views.DoctorsRecyclerViewAdapter
-import com.example.diplomaapplication.recycler_views.PatientsRecyclerViewAdapter
+import com.example.diplomaapplication.recycler_views.adapter.DoctorTypesRecyclerViewAdapter
+import com.example.diplomaapplication.recycler_views.adapter.DoctorsRecyclerViewAdapter
+import com.example.diplomaapplication.recycler_views.adapter.PatientsRecyclerViewAdapter
 
 import java.util.*
 
@@ -80,12 +79,12 @@ class AllDoctorsFragment : Fragment(), AllDoctorsInterface, DatabaseError {
 
     private fun setupDoctorsTypesCards(): ArrayList<DoctorTypeCard> {
         return arrayListOf(
-            DoctorTypeCard("Педиатр", R.drawable.pediatrican_icon, true),
-            DoctorTypeCard("Семейный врач", R.drawable.family_doctor_icon, false),
-            DoctorTypeCard("Кардиолог", R.drawable.cardiologist_icon, false),
-            DoctorTypeCard("Дерматолог", R.drawable.dermatologist_icon, false),
-            DoctorTypeCard("Психиатр", R.drawable.psychiatrist_icon, false),
-            DoctorTypeCard("Невролог", R.drawable.neurologist_icon, false)
+            DoctorTypeCard("Педиатр", R.drawable.icon_pediatrican_1, true),
+            DoctorTypeCard("Семейный врач", R.drawable.icon_family_doctor, false),
+            DoctorTypeCard("Кардиолог", R.drawable.icon_cardiologist, false),
+            DoctorTypeCard("Дерматолог", R.drawable.icon_dermatologist, false),
+            DoctorTypeCard("Психиатр", R.drawable.icon_psychiatrist, false),
+            DoctorTypeCard("Невролог", R.drawable.icon_neurologist, false)
         )
     }
 
@@ -172,8 +171,8 @@ class AllDoctorsFragment : Fragment(), AllDoctorsInterface, DatabaseError {
     }
 
     private fun setupUserData(firstName: String, isDoctor: Boolean) {
-        binding.nameHi.text = "Hi $firstName"
-        binding.topDoctorsTV.text = if (isDoctor) "Patients" else "Top Doctors"
+        binding.nameHi.text = "Здравствуй $firstName"
+        binding.topDoctorsTV.text = if (isDoctor) "Пациенты" else "Врачи"
     }
     override fun onDestroyView() {
         super.onDestroyView()

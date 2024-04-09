@@ -36,13 +36,11 @@ class ChangeName : Fragment(), DatabaseError {
         saveNewName()
     }
 
-    //setup nav
     private fun setupNavigation() = binding.changeNameBackButton.setOnClickListener {
         requireActivity().onBackPressed()
     }
 
 
-    //-----------------------------| Save new username in database |---------------------------------
     private fun saveNewName(){
         currentUserViewModel.getUser().observe(viewLifecycleOwner, Observer {user->
             binding.changeNameInput.setText(user!!.firstName)
@@ -52,13 +50,10 @@ class ChangeName : Fragment(), DatabaseError {
                 db.insertUserToDatabase(user,requireView(),this)
                 requireActivity().onBackPressed()
             }
-            //soft keyboard enter click
             Helpers().keyboardEnterButtonClick(binding.changeNameInput){binding.saveNewNameButton.performClick()}
         })
     }
-    //===============================================================================================
 
-    //handle eventual error
     override fun errorHandled(errorMessage: String, view: View) {
         Helpers().showSnackBar(errorMessage,requireView())
     }

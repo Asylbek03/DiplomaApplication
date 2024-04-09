@@ -19,7 +19,7 @@
         android:layout_height="80dp"
         android:layout_marginStart="20dp"
         android:layout_gravity="center"
-        android:src="@drawable/doctor_avatar_1"/>
+        android:src="@drawable/avatar_doctor_1"/>
 
     <LinearLayout
         android:layout_width="match_parent"

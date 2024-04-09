@@ -14,14 +14,11 @@ import java.lang.Exception
 
 class Authentication: DatabaseError {
 
-    // Google Firebase Auth
     private val auth = FirebaseAuth.getInstance()
 
-    // Firebase Firestore
     private val firestore = FirebaseFirestore.getInstance()
     private val database = FireStoreDatabase()
 
-    // Helpers (show dialogs, snackbars, etc.)
     private val helpers: Helpers = Helpers()
 
     fun registerWithEmailAndPassword(email: String, password: String,view: View,user: User) {
@@ -30,13 +27,10 @@ class Authentication: DatabaseError {
             dialog.show()
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful){
-                    //change user id to the current user uid in authentication
                     user.id = task.result!!.user!!.uid
-                    //insert user to database
                     database.insertUserToDatabase(user,view,this)
-                    helpers.showSnackBar("Successfully registering",view)
+                    helpers.showSnackBar("Регистрация успешно!",view)
                 }else{
-                    //catch network exception etc
                     helpers.showSnackBar(task.exception!!.message.toString(),view)
                 }
                 dialog.dismiss()
@@ -48,14 +42,14 @@ class Authentication: DatabaseError {
     }
 
     fun loginWithEmailAndPassword(email: String, password: String, view: View) {
-        val dialog: AlertDialog = helpers.getLoadingDialog(view.context, "Logging")  // Loading dialog
+        val dialog: AlertDialog = helpers.getLoadingDialog(view.context, "Вход")
         try {
             dialog.show()
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    helpers.showSnackBar("Successfully logged in", view)
+                    helpers.showSnackBar("Вход выполнен", view)
                 } else {
-                    helpers.showSnackBar("Login failed: ${task.exception?.message}", view)
+                    helpers.showSnackBar("Ошибка: ${task.exception?.message}", view)
                 }
                 dialog.dismiss()
             }
@@ -74,7 +68,7 @@ class Authentication: DatabaseError {
 
     fun signOutFromFirebase(view: View) {
         try {
-            helpers.showSnackBar("Logged out", view)
+            helpers.showSnackBar("Вы вышли", view)
             auth.signOut()
         } catch (ex: Exception) {
             helpers.showSnackBar(ex.message.toString(), view)
@@ -90,7 +84,7 @@ class Authentication: DatabaseError {
     }
 
     fun changePassword(oldPassword: String, newPassword: String, view: View, complete: () -> Unit) {
-        val dialog: AlertDialog = helpers.getLoadingDialog(view.context, "Changing password...")  // Loading dialog
+        val dialog: AlertDialog = helpers.getLoadingDialog(view.context, "Меняем пароль...")
         try {
             dialog.show()
             val user = auth.currentUser
@@ -100,21 +94,21 @@ class Authentication: DatabaseError {
                     if (task1.isSuccessful) {
                         user.updatePassword(newPassword).addOnCompleteListener { task2 ->
                             if (task2.isSuccessful) {
-                                helpers.showSnackBar("Password has been changed", view)
+                                helpers.showSnackBar("Пароль изменен!", view)
                                 complete()
                             } else {
                                 Log.d("EXC", task2.exception.toString())
-                                helpers.showSnackBar(task2.exception?.message ?: "Failed to change password", view)
+                                helpers.showSnackBar(task2.exception?.message ?: "Ошибка", view)
                             }
                         }
                     } else {
                         Log.d("EXC", task1.exception.toString())
-                        helpers.showSnackBar(task1.exception?.message ?: "Failed to reauthenticate", view)
+                        helpers.showSnackBar(task1.exception?.message ?: "Ошибка", view)
                     }
                     dialog.dismiss()
                 }
             } else {
-                helpers.showSnackBar("Failed to get current user", view)
+                helpers.showSnackBar("Ошибка пользователя", view)
                 dialog.dismiss()
             }
         } catch (ex: Exception) {

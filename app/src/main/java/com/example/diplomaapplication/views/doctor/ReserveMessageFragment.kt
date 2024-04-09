@@ -39,7 +39,6 @@ class ReserveMessageFragment : Fragment(), DatabaseError {
 
     private fun setupNavigation() =  binding.reserveMessageBackButton.setOnClickListener { requireActivity().onBackPressed() }
 
-    //--------------------| Set doctors info data in layout |---------------------------
     private fun setupDoctorInfo(){
         val chooseDoctorViewModel: ChooseDoctorViewModel = ViewModelProvider(requireActivity()).get(ChooseDoctorViewModel::class.java)
 
@@ -50,16 +49,13 @@ class ReserveMessageFragment : Fragment(), DatabaseError {
             binding.chooseDoctorBio.text = doctor.bio
             binding.chooseDoctorStarCount.text = doctor.starCount.toString()
 
-            //set on click on the reserve message button
             binding.reserveMessageButton.setOnClickListener {
                 insertRequestToDatabase(doctor)
             }
 
         })
     }
-    //===================================================================================
 
-    //---------------------------| Insert the request to database |---------------------------------
     private fun insertRequestToDatabase(doctor: User){
         val currentUserViewModel: CurrentUserViewModel = ViewModelProvider(requireActivity()).get(CurrentUserViewModel::class.java)
         currentUserViewModel.getUser().observe(viewLifecycleOwner, Observer {
@@ -72,16 +68,13 @@ class ReserveMessageFragment : Fragment(), DatabaseError {
             val db: FireStoreDatabase = FireStoreDatabase()
             db.insertRequest(request,requireView(),this)
 
-            //set request in view model to provide it into the message fragment
             val requestViewModel: RequestViewModel = ViewModelProvider(requireActivity()).get(RequestViewModel::class.java)
             requestViewModel.setRequest(request.id)
 
             findNavController().navigate(R.id.action_reserveMessageFragment_to_chatFragment)
         })
     }
-    //==============================================================================================
 
-    //eventual error handler
     override fun errorHandled(errorMessage: String, view: View) {
         Helpers().showSnackBar(errorMessage,view)
     }

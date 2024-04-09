@@ -40,7 +40,7 @@ class RegisterFragment : Fragment() {
 
         registerTimeViewModel = ViewModelProvider(requireActivity()).get(RegisterTimeViewModel::class.java)
 
-        user = User(System.currentTimeMillis().toString(),"Name","A doctor", R.drawable.doctor_avatar_1, true, " " , System.currentTimeMillis(), System.currentTimeMillis(),0.0f)
+        user = User(System.currentTimeMillis().toString(),"Name","A doctor", R.drawable.avatar_doctor_1, true, " " , System.currentTimeMillis(), System.currentTimeMillis(),0.0f)
 
         setupNavigation()
         binding.registerButton.setOnClickListener { registerWithEmailAndPassword() }
@@ -57,8 +57,15 @@ class RegisterFragment : Fragment() {
     private fun registerWithEmailAndPassword() {
         user.firstName = binding.registerFullNameInput.text.toString()
         user.bio = if(user.isDoctor) "A Doctor" else "A patient"
-        user.avatar =  if(user.isDoctor) R.drawable.doctor_avatar_1 else R.drawable.user_avatar_1
+        user.avatar =  if(user.isDoctor) R.drawable.avatar_doctor_1 else R.drawable.avatar_user_1
 
+        val password = binding.userPasswordInput.text.toString()
+        val confirmPassword = binding.userConfirmPasswordInput.text.toString()
+
+        if (password != confirmPassword) {
+            Helpers().showSnackBar("Пароли не совпадают", requireView())
+            return
+        }
 
         if(user.startTime!! > user.endTime!!){
             Log.d("TIME",user.startTime.toString())

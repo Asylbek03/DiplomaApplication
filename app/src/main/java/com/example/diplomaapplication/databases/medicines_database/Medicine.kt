@@ -10,6 +10,9 @@ data class Medicine(
     var type: String,
     var time: Long,
     var duration: Int,
+    var durationUnit: String,
+    var isTaken: Boolean = false,
+    var description: String,
     var formName: String,
     var formImage:Int
 ) {

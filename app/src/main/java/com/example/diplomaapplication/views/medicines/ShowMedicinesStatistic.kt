@@ -1,190 +1,221 @@
 package com.example.diplomaapplication.views.medicines
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.diplomaapplication.R
 import com.example.diplomaapplication.databases.medicines_database.Medicine
 import com.example.diplomaapplication.databases.medicines_database.MedicinesViewModel
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.AxisBase
+import com.example.diplomaapplication.databinding.FragmentAddMedicineBinding
+import com.example.diplomaapplication.databinding.FragmentRegisterBinding
+import com.example.diplomaapplication.databinding.FragmentShowMedicinesStatisticBinding
+import com.example.diplomaapplication.model.views.RegisterTimeViewModel
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.utils.MPPointF
 import java.text.SimpleDateFormat
-import java.util.*
-import java.util.Calendar.DAY_OF_MONTH
-import java.util.Calendar.DAY_OF_WEEK
-import java.util.Calendar.HOUR_OF_DAY
-import java.util.Calendar.JANUARY
-import java.util.Calendar.MILLISECOND
-import java.util.Calendar.MINUTE
-import java.util.Calendar.MONTH
-import java.util.Calendar.SECOND
-import java.util.Calendar.WEEK_OF_YEAR
-import java.util.Calendar.YEAR
-import kotlin.collections.ArrayList
+import java.util.Calendar
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class ShowMedicinesStatistic : Fragment() {
 
     private lateinit var medicinesViewModel: MedicinesViewModel
-    private lateinit var lineChart: LineChart
+    private lateinit var barChart: BarChart
+    private lateinit var customMarkerView: CustomMarkerView
+    private var _binding: FragmentShowMedicinesStatisticBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_show_medicines_statistic, container, false)
+        _binding = FragmentShowMedicinesStatisticBinding.inflate(inflater, container, false)
+        val root = binding.root
+        barChart = root.findViewById(R.id.bar_chart)
 
-        lineChart = view.findViewById(R.id.lineChart)
         medicinesViewModel = ViewModelProvider(this).get(MedicinesViewModel::class.java)
 
-        view.findViewById<Button>(R.id.buttonDay).setOnClickListener {
-            // Загрузка статистики за день
-            loadStatisticsForDay()
+        customMarkerView = CustomMarkerView(requireContext(), R.layout.custom_marker_view)
+
+
+
+        root.findViewById<Button>(R.id.btn_day).setOnClickListener {
+            showMedicinesStatisticForPeriod(getStartTimeForPeriod(Calendar.DAY_OF_YEAR), getCurrentTime(), Calendar.DAY_OF_YEAR)
         }
 
-        view.findViewById<Button>(R.id.buttonWeek).setOnClickListener {
-            // Загрузка статистики за неделю
-            loadStatisticsForWeek()
+        root.findViewById<Button>(R.id.btn_week).setOnClickListener {
+            showMedicinesStatisticForPeriod(getStartTimeForPeriod(Calendar.WEEK_OF_YEAR), getCurrentTime(), Calendar.WEEK_OF_YEAR)
         }
 
-        view.findViewById<Button>(R.id.buttonMonth).setOnClickListener {
-            // Загрузка статистики за месяц
-            loadStatisticsForMonth()
+        root.findViewById<Button>(R.id.btn_month).setOnClickListener {
+            showMedicinesStatisticForPeriod(getStartTimeForPeriod(Calendar.MONTH), getCurrentTime(), Calendar.MONTH)
         }
 
-        view.findViewById<Button>(R.id.buttonYear).setOnClickListener {
-            // Загрузка статистики за год
-            loadStatisticsForYear()
+        root.findViewById<Button>(R.id.btn_year).setOnClickListener {
+            showMedicinesStatisticForPeriod(getStartTimeForPeriod(Calendar.YEAR), getCurrentTime(), Calendar.YEAR)
         }
 
-        observeMedicines()
+        root.findViewById<ImageView>(R.id.showStatisticBackButton).setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
-        return view
+        val markerView = CustomMarkerView(requireContext(), R.layout.custom_marker_view)
+        barChart.marker = markerView
+        return root
     }
 
-    private fun observeMedicines() {
-        medicinesViewModel.allMedicines.observe(viewLifecycleOwner, Observer { medicines ->
-            updateChart(medicines)
-        })
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        showMedicinesStatisticForPeriod(getStartTimeForPeriod(Calendar.DAY_OF_YEAR), getCurrentTime(), Calendar.DAY_OF_YEAR)
     }
 
-    private fun updateChart(medicines: List<Medicine>) {
-        // Очистка графика перед обновлением
-        lineChart.clear()
+    @SuppressLint("SetTextI18n")
+    private fun showMedicinesStatisticForPeriod(startTime: Long, endTime: Long, periodType: Int) {
+        medicinesViewModel.getMedicinesForPeriod(startTime, endTime).observe(viewLifecycleOwner) { medicines ->
+            val entries = ArrayList<BarEntry>()
 
-        // Логика по добавлению данных на график и настройка графика
-        // Пример:
-        val entries = ArrayList<Entry>()
-        medicines.forEachIndexed { index, medicine ->
-            if (medicine.amount != "Blank") {
-                val amount = medicine.amount.toFloatOrNull()
-                amount?.let {
-                    entries.add(Entry(index.toFloat(), it))
+            val totalTakenMedicines = getTotalTakenMedicines(medicines)
+            binding.overallTablets.text = "Выпито за все время: $totalTakenMedicines"
+
+            val xAxisLabels = getXAxisLabels(startTime, endTime, periodType)
+
+            for (i in xAxisLabels.indices) {
+                val timePeriodStart = getTimePeriodStart(startTime, periodType, i)
+                val timePeriodEnd = getTimePeriodEnd(startTime, periodType, i)
+                val takenCount =
+                    medicines.count { it.isTaken && it.time >= timePeriodStart && it.time < timePeriodEnd }
+                entries.add(BarEntry(i.toFloat(), takenCount.toFloat()))
+            }
+
+            val dataSet = BarDataSet(entries, "Medicines Taken")
+            dataSet.color = Color.parseColor("#4CAF50")
+
+            val data = BarData(dataSet)
+
+            barChart.data = data
+            barChart.xAxis.valueFormatter =
+                IndexAxisValueFormatter(xAxisLabels)
+
+            barChart.axisLeft.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return value.toInt().toString()
                 }
+            }
+
+            barChart.xAxis.labelRotationAngle = 0f
+            barChart.xAxis.granularity = 1f
+
+            barChart.legend.isEnabled = false
+
+            barChart.description.text = "Принятые лекарства"
+            barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+            barChart.xAxis.textSize = 12f
+            barChart.axisLeft.textSize = 12f
+
+            barChart.animateY(1000, Easing.EaseInOutCubic)
+
+            barChart.invalidate()
+        }
+    }
+
+    private fun getTimePeriodStart(startTime: Long, periodType: Int, index: Int): Long {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = startTime
+        when (periodType) {
+            Calendar.DAY_OF_YEAR -> calendar.add(Calendar.HOUR_OF_DAY, index)
+            Calendar.WEEK_OF_YEAR -> calendar.add(Calendar.DAY_OF_YEAR, index)
+            Calendar.MONTH -> calendar.add(Calendar.WEEK_OF_MONTH, index)
+            Calendar.YEAR -> calendar.add(Calendar.MONTH, index)
+        }
+        return calendar.timeInMillis
+    }
+
+    private fun getTimePeriodEnd(startTime: Long, periodType: Int, index: Int): Long {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = startTime
+        when (periodType) {
+            Calendar.DAY_OF_YEAR -> calendar.add(Calendar.HOUR_OF_DAY, index + 1)
+            Calendar.WEEK_OF_YEAR -> calendar.add(Calendar.DAY_OF_YEAR, index + 1)
+            Calendar.MONTH -> calendar.add(Calendar.WEEK_OF_MONTH, index + 1)
+            Calendar.YEAR -> calendar.add(Calendar.MONTH, index + 1)
+        }
+        return calendar.timeInMillis
+    }
+
+    private fun getTotalTakenMedicines(medicines: List<Medicine>): Int {
+        return medicines.count { it.isTaken }
+    }
+
+    private fun getStartTimeForPeriod(period: Int): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        when (period) {
+            Calendar.WEEK_OF_YEAR -> calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+            Calendar.MONTH -> calendar.set(Calendar.DAY_OF_MONTH, 1)
+            Calendar.YEAR -> calendar.set(Calendar.DAY_OF_YEAR, 1)
+        }
+        return calendar.timeInMillis
+    }
+
+    private fun getCurrentTime(): Long {
+        return System.currentTimeMillis()
+    }
+
+    private fun getXAxisLabels(startTime: Long, endTime: Long, periodType: Int): List<String> {
+        val labels = mutableListOf<String>()
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = startTime
+
+        var currentWeekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH)
+
+        while (calendar.timeInMillis <= endTime) {
+            val label: String = when (periodType) {
+                Calendar.DAY_OF_YEAR -> SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.time)
+                Calendar.WEEK_OF_YEAR -> SimpleDateFormat("dd.MM", Locale.getDefault()).format(calendar.time)
+                Calendar.MONTH -> {
+                    if (currentWeekOfMonth != calendar.get(Calendar.WEEK_OF_MONTH)) {
+                        currentWeekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH)
+                        "Неделя $currentWeekOfMonth"
+                    } else {
+                        ""
+                    }
+                }
+                Calendar.YEAR -> SimpleDateFormat("MMM", Locale.getDefault()).format(calendar.time)
+                else -> ""
+            }
+            labels.add(label)
+            when (periodType) {
+                Calendar.DAY_OF_YEAR -> calendar.add(Calendar.HOUR_OF_DAY, 1)
+                Calendar.WEEK_OF_YEAR -> calendar.add(Calendar.DAY_OF_YEAR, 1)
+                Calendar.MONTH -> calendar.add(Calendar.DAY_OF_YEAR, 1)
+                Calendar.YEAR -> calendar.add(Calendar.MONTH, 1)
             }
         }
 
-        val dataSet = LineDataSet(entries, "Amount of Medicine")
-        val lineData = LineData(dataSet)
-        lineChart.data = lineData
-
-        // Настройка оси X
-        val xAxis = lineChart.xAxis
-        xAxis.valueFormatter = DateAxisFormatter()
-
-        lineChart.invalidate()
+        return labels
     }
 
-
-    private fun loadStatisticsForDay() {
-        val calendar = Calendar.getInstance()
-        calendar.set(HOUR_OF_DAY, 0)
-        calendar.set(MINUTE, 0)
-        calendar.set(SECOND, 0)
-        val startOfDay = calendar.timeInMillis
-        calendar.set(HOUR_OF_DAY, 23)
-        calendar.set(MINUTE, 59)
-        calendar.set(SECOND, 59)
-        val endOfDay = calendar.timeInMillis
-
-        // Здесь можно использовать вашу ViewModel для загрузки данных из базы данных
-        // Например:
-        medicinesViewModel.getMedicinesInTimeRange(startOfDay, endOfDay).observe(viewLifecycleOwner, Observer { medicines ->
-            updateChart(medicines)
-        })
-    }
-
-    private fun loadStatisticsForWeek() {
-        val calendar = Calendar.getInstance()
-        calendar.set(DAY_OF_WEEK, calendar.firstDayOfWeek)
-        calendar.set(HOUR_OF_DAY, 0)
-        calendar.set(MINUTE, 0)
-        calendar.set(SECOND, 0)
-        val startOfWeek = calendar.timeInMillis
-        calendar.add(WEEK_OF_YEAR, 1)
-        calendar.add(MILLISECOND, -1)
-        val endOfWeek = calendar.timeInMillis
-
-        // Здесь можно использовать вашу ViewModel для загрузки данных из базы данных
-        // Например:
-        medicinesViewModel.getMedicinesInTimeRange(startOfWeek, endOfWeek).observe(viewLifecycleOwner, Observer { medicines ->
-            updateChart(medicines)
-        })
-    }
-
-    private fun loadStatisticsForMonth() {
-        val calendar = Calendar.getInstance()
-        calendar.set(DAY_OF_MONTH, 1)
-        calendar.set(HOUR_OF_DAY, 0)
-        calendar.set(MINUTE, 0)
-        calendar.set(SECOND, 0)
-        val startOfMonth = calendar.timeInMillis
-        calendar.add(MONTH, 1)
-        calendar.add(MILLISECOND, -1)
-        val endOfMonth = calendar.timeInMillis
-
-        // Здесь можно использовать вашу ViewModel для загрузки данных из базы данных
-        // Например:
-        medicinesViewModel.getMedicinesInTimeRange(startOfMonth, endOfMonth).observe(viewLifecycleOwner, Observer { medicines ->
-            updateChart(medicines)
-        })
-    }
-
-    private fun loadStatisticsForYear() {
-        val calendar = Calendar.getInstance()
-        calendar.set(MONTH, JANUARY)
-        calendar.set(DAY_OF_MONTH, 1)
-        calendar.set(HOUR_OF_DAY, 0)
-        calendar.set(MINUTE, 0)
-        calendar.set(SECOND, 0)
-        val startOfYear = calendar.timeInMillis
-        calendar.add(YEAR, 1)
-        calendar.add(MILLISECOND, -1)
-        val endOfYear = calendar.timeInMillis
-
-        // Здесь можно использовать вашу ViewModel для загрузки данных из базы данных
-        // Например:
-        medicinesViewModel.getMedicinesInTimeRange(startOfYear, endOfYear).observe(viewLifecycleOwner, Observer { medicines ->
-            updateChart(medicines)
-        })
-    }
-
-    private inner class DateAxisFormatter : ValueFormatter() {
-        private val dateFormat = SimpleDateFormat("dd.MM", Locale.getDefault())
-
-        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            val millis = value.toLong()
-            return dateFormat.format(Date(millis))
-        }
-    }
 }
+

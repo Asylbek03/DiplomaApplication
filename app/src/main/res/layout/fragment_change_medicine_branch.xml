@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightBlue"
     tools:context=".views.profile.user_config.ChangeMedicineBranch">
 
     <AutoCompleteTextView
@@ -37,8 +38,8 @@
         android:layout_marginTop="48dp"
         android:fontFamily="@font/open_sans_regular"
         android:text="@string/new_mb"
-        android:textColor="@color/lightGray"
-        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/changeMedicineBranchBackButton"
         app:layout_constraintTop_toBottomOf="@+id/changeMedicineBranchBackButton" />
 
@@ -47,11 +48,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="448dp"
         android:background="@drawable/rounded10_bg"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/blue"
         android:fontFamily="@font/open_sans_regular"
         android:paddingTop="17dp"
         android:paddingBottom="17dp"
@@ -63,8 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/changeMedicineBranchBackButton"
@@ -75,7 +74,7 @@
         android:src="@drawable/ic_back_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/black" />
+        app:tint="@color/white" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

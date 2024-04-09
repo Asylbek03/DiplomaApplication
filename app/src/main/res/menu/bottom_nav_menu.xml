@@ -9,8 +9,14 @@
 
     <item
         android:id="@+id/allDoctorsFragment"
-        android:icon="@drawable/ic_doctors"
+        android:icon="@drawable/icon_doctors"
         android:title="@string/title_chats" />
+
+    <item
+        android:id="@id/fragment_map"
+        android:icon="@drawable/circle_border"
+        android:title="@string/map"/>
+
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_profile"

@@ -9,10 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.diplomaapplication.R
-import com.example.diplomaapplication.databinding.FragmentAddMedicineBinding
 import com.example.diplomaapplication.databinding.FragmentWelcomeAuthBinding
 import com.example.diplomaapplication.model.PagerCard
-import com.example.diplomaapplication.recycler_views.WelcomeViewPagerAdapter
+import com.example.diplomaapplication.recycler_views.adapter.WelcomeViewPagerAdapter
 
 
 class WelcomeAuthFragment : Fragment() {
