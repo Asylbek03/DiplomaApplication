@@ -8,7 +8,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.diplomaapplication.R
-import com.example.diplomaapplication.databases.medicines_database.MedicinesDatabase
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

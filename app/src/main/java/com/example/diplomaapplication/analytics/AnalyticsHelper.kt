@@ -3,7 +3,7 @@ package com.example.diplomaapplication.analytics
 import android.content.Context
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import com.example.diplomaapplication.databases.medicines_database.Medicine
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 import com.google.firebase.analytics.FirebaseAnalytics
 
 import java.util.Date

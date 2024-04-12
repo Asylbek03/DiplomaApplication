@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diplomaapplication.R
-import com.example.diplomaapplication.databases.medicines_database.Medicine
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 import com.example.diplomaapplication.recycler_views.holder.MedicinesViewHolder
 import com.example.diplomaapplication.views.medicines.DeleteMedicineInterface
 

@@ -1,4 +1,4 @@
-package com.example.diplomaapplication.databases.medicines_database
+package com.example.diplomaapplication.databases.room_database.medicines_database
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -10,7 +10,8 @@ import kotlinx.coroutines.launch
 
 class MedicinesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: MedicinesRepository = MedicinesRepository(application, MedicinesDatabase.getDatabase(application).medicineDao())
+    private val repository: MedicinesRepository = MedicinesRepository(application, MedicinesDatabase.getDatabase(application)
+        .medicineDao())
     val allMedicines: LiveData<List<Medicine>> = repository.allMedicines
 
     // Define newMedicine as MutableLiveData

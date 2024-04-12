@@ -1,12 +1,17 @@
 package com.example.diplomaapplication.databases.firestore_database
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.view.View
 import com.example.diplomaapplication.helpers.Helpers
 import com.example.diplomaapplication.model.Request
 import com.example.diplomaapplication.model.User
 import com.example.diplomaapplication.views.doctor.AllDoctorsInterface
 import com.example.diplomaapplication.views.doctor.ChatInterface
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
+
 
 class FireStoreDatabase {
     private val firestore = FirebaseFirestore.getInstance()
@@ -14,21 +19,32 @@ class FireStoreDatabase {
     private val doctorsCollection = firestore.collection("Doctors")
     private val requestsCollection = firestore.collection("Requests")
 
-    fun insertUserToDatabase(user: User, view: View, errorListener: DatabaseError){
-        if(user.isDoctor)
-            doctorsCollection.document(user.id.toString()).set(user).addOnFailureListener {
-                errorListener.errorHandled(it.message.toString(),view)
-            }
-        else{
-            user.medicineBranch = null
-            user.starCount = null
-            user.startTime = null
-            user.endTime = null
-            patientsCollection.document(user.id.toString()).set(user).addOnFailureListener {
-                errorListener.errorHandled(it.message.toString(),view)
+    fun insertUserToDatabase(user: User, view: View, errorListener: DatabaseError) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+
+                user.fcmToken = token
+
+                if (user.isDoctor) {
+                    doctorsCollection.document(user.id.toString()).set(user).addOnFailureListener {
+                        errorListener.errorHandled(it.message.toString(), view)
+                    }
+                } else {
+                    user.medicineBranch = null
+                    user.starCount = null
+                    user.startTime = null
+                    user.endTime = null
+                    patientsCollection.document(user.id.toString()).set(user).addOnFailureListener {
+                        errorListener.errorHandled(it.message.toString(), view)
+                    }
+                }
+            } else {
+                Log.e(TAG, "Не удалось получить токен устройства")
             }
         }
     }
+
 
     fun getActiveDoctors(view: View, listener: AllDoctorsInterface) {
         val arrayListOfDoctors = arrayListOf<User>()
@@ -128,6 +144,16 @@ class FireStoreDatabase {
         }
     }
 
+    fun getFCMTokenForPatient(patientId: String, callback: (String?) -> Unit) {
+        patientsCollection.document(patientId).get().addOnSuccessListener { documentSnapshot ->
+            val patient = documentSnapshot.toObject(User::class.java)
+            val patientToken = patient?.fcmToken
+            callback(patientToken)
+        }.addOnFailureListener { exception ->
+            Log.e(TAG, "Error getting FCM token for patient: ${exception.message}")
+            callback(null)
+        }
+    }
 
     fun deleteAndRemoveValueEventListenerFromRequest(requestId: String){
         requestsCollection.document(requestId).delete()

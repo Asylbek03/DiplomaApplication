@@ -13,8 +13,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.diplomaapplication.R
-import com.example.diplomaapplication.databases.medicines_database.Medicine
-import com.example.diplomaapplication.databases.medicines_database.MedicinesViewModel
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesViewModel
 import com.example.diplomaapplication.databinding.FragmentAddMedicineBinding
 import com.example.diplomaapplication.databinding.FragmentRegisterBinding
 import com.example.diplomaapplication.databinding.FragmentShowMedicinesStatisticBinding
@@ -94,7 +94,7 @@ class ShowMedicinesStatistic : Fragment() {
             val entries = ArrayList<BarEntry>()
 
             val totalTakenMedicines = getTotalTakenMedicines(medicines)
-            binding.overallTablets.text = "Выпито за все время: $totalTakenMedicines"
+            binding.overallTablets.text = "Выпито: $totalTakenMedicines"
 
             val xAxisLabels = getXAxisLabels(startTime, endTime, periodType)
 

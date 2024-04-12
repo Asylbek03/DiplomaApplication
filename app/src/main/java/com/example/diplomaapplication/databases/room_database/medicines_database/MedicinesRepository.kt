@@ -1,4 +1,4 @@
-package com.example.diplomaapplication.databases.medicines_database
+package com.example.diplomaapplication.databases.room_database.medicines_database
 
 import android.content.Context
 import androidx.annotation.WorkerThread

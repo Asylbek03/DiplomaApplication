@@ -1,4 +1,4 @@
-package com.example.diplomaapplication.databases.medicines_database
+package com.example.diplomaapplication.databases.room_database.medicines_database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

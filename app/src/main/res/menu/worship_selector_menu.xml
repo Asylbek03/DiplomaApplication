@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/type_pharmacy"
+        android:icon="@drawable/icon_pharmacy"
+        android:title="Аптеки" />
+    <item
+        android:id="@+id/type_hospital"
+        android:icon="@drawable/icon_hospital"
+        android:title="Больницы" />
+    <item
+        android:id="@+id/type_islam"
+        android:icon="@drawable/ic_islam"
+        android:title="Mosque" />
+
+    <item
+        android:id="@+id/type_others"
+        android:icon="@drawable/worship_general_71"
+        android:title="Others" />
+    <item
+        android:id="@+id/type_all"
+        android:icon="@drawable/ic_add"
+        android:title="All" />
+
+
+</menu>

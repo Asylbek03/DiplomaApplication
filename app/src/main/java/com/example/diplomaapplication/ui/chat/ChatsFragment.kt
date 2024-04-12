@@ -1,5 +1,6 @@
 package com.example.diplomaapplication.ui.chat
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diplomaapplication.R
 import com.example.diplomaapplication.databases.firestore_database.DatabaseError
 import com.example.diplomaapplication.databases.firestore_database.FireStoreDatabase
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 import com.example.diplomaapplication.databinding.FragmentChatBinding
 import com.example.diplomaapplication.helpers.Helpers
 import com.example.diplomaapplication.model.Message
@@ -24,6 +27,11 @@ import com.example.diplomaapplication.model.views.RequestViewModel
 import com.example.diplomaapplication.recycler_views.adapter.MessagesRecyclerViewAdapter
 import com.example.diplomaapplication.views.doctor.ChatInterface
 import com.example.diplomaapplication.views.doctor.ConfirmDialog
+import com.example.diplomaapplication.views.medicines.AddMedicineFragmentChat
+import com.example.diplomaapplication.views.medicines.PrescriptionDialogFragment
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 class ChatsFragment : Fragment(), ChatInterface, DatabaseError {
 
@@ -64,6 +72,20 @@ class ChatsFragment : Fragment(), ChatInterface, DatabaseError {
 
         binding.messagesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+//        binding.prescribeMedicineButton.setOnClickListener {
+//            val currentUser = currentUserViewModel.getUser().value
+//            if (currentUser?.isDoctor == true) {
+//                findNavController().navigate(R.id.action_chatFragment_to_prescribeMedicinesFragment)
+//            } else {
+//                Toast.makeText(requireContext(), "Only doctors can prescribe medicine", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+
+
+
+
+
+
         Helpers().keyboardEnterButtonClick(binding.messageTextInput){
             closeKeyboard()
         }
@@ -91,6 +113,15 @@ class ChatsFragment : Fragment(), ChatInterface, DatabaseError {
                     ConfirmDialog("Подтвердить","Вы хотите выйти?", currentUser!!.isDoctor,request,this).show(requireActivity().supportFragmentManager,"confirm")
                 }
 
+                binding.prescribeMedicineButton.setOnClickListener {
+                    if (currentUser?.isDoctor == true) {
+                        val dialogFragment = PrescriptionDialogFragment.newInstance(currentUserViewModel, requestViewModel, request)
+                        dialogFragment.show(childFragmentManager, "PrescriptionDialogFragment")
+                    } else {
+                        val dialogFragment = AddMedicineFragmentChat.newInstance(currentUserViewModel, requestViewModel, request)
+                        dialogFragment.show(childFragmentManager, "AddMedicineFragmentChat")
+                    }
+                }
 
                 if(currentUser!!.isDoctor){
                     binding.chatMemberName.text = request.patient?.firstName
@@ -150,8 +181,4 @@ class ChatsFragment : Fragment(), ChatInterface, DatabaseError {
         }catch (_:java.lang.Exception){}
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

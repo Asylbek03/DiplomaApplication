@@ -9,5 +9,6 @@ data class User(
     var medicineBranch: String? = null,
     var startTime: Long? = null,
     var endTime: Long? = null,
-    var starCount: Float? = null
+    var starCount: Float? = null,
+    var fcmToken: String? = null
 )

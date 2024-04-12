@@ -1,6 +1,6 @@
 package com.example.diplomaapplication.views.medicines
 
-import com.example.diplomaapplication.databases.medicines_database.Medicine
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 
 
 class MedicinesArrayListComparator:Comparator<Medicine> {

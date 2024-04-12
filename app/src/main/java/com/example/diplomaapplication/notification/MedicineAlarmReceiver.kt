@@ -12,8 +12,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.diplomaapplication.MainActivity
 import com.example.diplomaapplication.R
-import com.example.diplomaapplication.databases.medicines_database.MedicinesDatabase
-import com.example.diplomaapplication.databases.medicines_database.MedicinesRepository
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesDatabase
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesRepository
 import kotlinx.coroutines.runBlocking
 
 

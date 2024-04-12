@@ -29,9 +29,19 @@
     <fragment
         android:id="@+id/fragment_map"
         android:label="@string/title_map"
-        android:name="com.example.diplomaapplication.ui.map.MapFragment"
+        android:name="com.example.diplomaapplication.ui.map.view.MapFragment"
+        tools:layout="@layout/fragment_map"/>
+    <fragment
+        android:id="@+id/fragment_main_map"
+        android:label="@string/title_map"
+        android:name="com.example.diplomaapplication.ui.map.view.MapMainActivity"
         tools:layout="@layout/fragment_map"/>
 
+    <fragment
+        android:id="@+id/prescribeMedicinesFragment"
+        android:label="@string/title_add_medicines"
+        android:name="com.example.diplomaapplication.views.medicines.PrescribeMedicinesFragment"
+        tools:layout="@layout/fragment_prescribe_medicines" />
     <fragment
         android:id="@+id/addMedicineFragment"
         android:label="@string/title_add_medicines"
@@ -105,10 +115,33 @@
     </fragment>
 
     <fragment
+        android:id="@+id/AddMedicineFragmentChat"
+        android:label="@string/title_settings"
+        android:name="com.example.diplomaapplication.views.medicines.AddMedicineFragmentChat"
+        tools:layout="@layout/fragment_add_medicine_chat">
+
+    </fragment>
+    <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.diplomaapplication.ui.chat.ChatsFragment"
         android:label="@string/title_chat"
         tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_addMedicinesFragmentChat"
+            app:destination="@id/AddMedicineFragmentChat"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/mobile_navigation"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_chatFragment_to_prescribeMedicinesFragment"
+            app:destination="@id/prescribeMedicinesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/mobile_navigation"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_chatFragment_to_medicinesFragment"
             app:destination="@id/fragment_medicines"

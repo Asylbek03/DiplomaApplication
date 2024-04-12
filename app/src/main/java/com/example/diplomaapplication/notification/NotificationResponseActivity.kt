@@ -7,9 +7,9 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.diplomaapplication.R
-import com.example.diplomaapplication.databases.medicines_database.MedicinesDatabase
-import com.example.diplomaapplication.databases.medicines_database.MedicinesViewModel
-import com.example.diplomaapplication.databases.medicines_database.MedicinesRepository
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesDatabase
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesViewModel
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesRepository
 
 
 class NotificationResponseActivity : AppCompatActivity() {

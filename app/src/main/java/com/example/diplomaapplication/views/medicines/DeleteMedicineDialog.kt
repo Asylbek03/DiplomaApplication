@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.example.diplomaapplication.databases.medicines_database.Medicine
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 
 class DeleteMedicineDialog(private val medicine: Medicine, private val listener:DeleteMedicineInterface) : DialogFragment(){
 

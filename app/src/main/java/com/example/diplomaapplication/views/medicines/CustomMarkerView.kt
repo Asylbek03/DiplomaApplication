@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
 import com.example.diplomaapplication.R
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
@@ -16,14 +17,17 @@ import java.util.concurrent.TimeUnit
 
 @SuppressLint("ViewConstructor")
 class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
+    private var medicine: Medicine? = null
 
     private val tvContent: TextView = findViewById(R.id.tvContent)
 
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         if (e != null && e is BarEntry) {
-            val time = getTimeForEntry(e)
             val taken = e.y.toInt()
             tvContent.text = "Выпито: $taken\n"
+            medicine?.let {
+                tvContent.append("Лекарство: ${it.name}")
+            }
         }
         super.refreshContent(e, highlight)
     }

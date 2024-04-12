@@ -17,14 +17,15 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diplomaapplication.R
-import com.example.diplomaapplication.databases.medicines_database.Medicine
-import com.example.diplomaapplication.databases.medicines_database.MedicineDao
-import com.example.diplomaapplication.databases.medicines_database.MedicinesViewModel
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicineDao
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesViewModel
 import com.example.diplomaapplication.databinding.FragmentAddMedicineBinding
 import com.example.diplomaapplication.helpers.Helpers
 import com.example.diplomaapplication.notification.MedicineAlarmReceiver
@@ -96,6 +97,10 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
 
         binding.addMedicineBackButton.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        binding.cameraButton.setOnClickListener {
+            openCameraFragment()
         }
 
         val durationPicker = binding.durationPicker
@@ -241,6 +246,21 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
                         putExtra("medicineImage", medicine.formImage)
                     }
 
+                    val result = Bundle().apply {
+                        putString("medicineName", medicine.name)
+                        putString("medicineAmount", medicine.amount)
+                        putString("medicineType", medicine.type)
+                        putLong("medicineTime", medicine.time)
+                        putInt("medicineDuration", medicine.duration)
+                        putString("medicineDurationUnit", medicine.durationUnit)
+                        putBoolean("medicineIsTaken", medicine.isTaken)
+                        putString("medicineDescription", medicine.description)
+                        putString("medicineFormName", medicine.formName)
+                        putInt("medicineImage", medicine.formImage)
+                        putInt("medicineId", medicine.id)
+                    }
+                    setFragmentResult("addMedicineResult", result)
+
                     val alarmId = System.currentTimeMillis().toInt()
 
                     cancelExistingAlarm(alarmManager, intent, alarmId)
@@ -273,7 +293,17 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
         }
     }
 
+    private fun openCameraFragment() {
+        //val cameraFragment = CameraFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        //transaction.replace(R.id.addMedicineFragment, cameraFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 
+    fun updateMedicineName(medicineName: String) {
+        binding.medicineNameInput.setText(medicineName)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

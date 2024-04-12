@@ -3,23 +3,24 @@
 
     <item
         android:id="@+id/fragment_medicines"
-        android:icon="@drawable/ic_pill"
+        android:icon="@drawable/icon_pill"
         android:title="@string/title_home" />
 
 
     <item
         android:id="@+id/allDoctorsFragment"
-        android:icon="@drawable/icon_doctors"
+        android:icon="@drawable/icon_chat"
         android:title="@string/title_chats" />
 
     <item
-        android:id="@id/fragment_map"
-        android:icon="@drawable/circle_border"
+        android:id="@id/fragment_main_map"
+        android:icon="@drawable/icon_map"
         android:title="@string/map"/>
+
 
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_profile"
+        android:icon="@drawable/icon_profile"
         android:title="@string/title_profile" />
 
 

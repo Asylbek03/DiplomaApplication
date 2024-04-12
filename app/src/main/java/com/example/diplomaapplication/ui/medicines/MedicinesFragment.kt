@@ -18,7 +18,7 @@ import com.example.diplomaapplication.R
 import com.example.diplomaapplication.authentication.Authentication
 import com.example.diplomaapplication.databases.firestore_database.FireStoreDatabase
 import com.example.diplomaapplication.databases.firestore_database.GetCurrentUserInterface
-import com.example.diplomaapplication.databases.medicines_database.Medicine
+import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 import com.example.diplomaapplication.databinding.FragmentMedicinesBinding
 import com.example.diplomaapplication.helpers.Helpers
 import com.example.diplomaapplication.helpers.MedicinesCalendar
@@ -39,7 +39,7 @@ import java.util.Collections
 class MedicinesFragment : Fragment(), DeleteMedicineInterface, GetCurrentUserInterface {
 
     private var _binding: FragmentMedicinesBinding? = null
-    private lateinit var medicinesViewModel: com.example.diplomaapplication.databases.medicines_database.MedicinesViewModel
+    private lateinit var medicinesViewModel: com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesViewModel
     private lateinit var allMedicines: List<Medicine>
     private lateinit var clickedDay: CalendarDay
     private lateinit var alarmManager: AlarmManager
@@ -84,7 +84,7 @@ class MedicinesFragment : Fragment(), DeleteMedicineInterface, GetCurrentUserInt
         alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         medicinesViewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(
-            com.example.diplomaapplication.databases.medicines_database.MedicinesViewModel::class.java)
+            com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesViewModel::class.java)
         binding.medicinesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val currentCalendar = Calendar.getInstance()

@@ -15,7 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.diplomaapplication.analytics.AnalyticsEvents
 import com.example.diplomaapplication.analytics.AnalyticsHelper
 import com.example.diplomaapplication.authentication.Authentication
-import com.example.diplomaapplication.databases.medicines_database.MedicinesDatabase
+import com.example.diplomaapplication.databases.room_database.medicines_database.MedicinesDatabase
 import com.example.diplomaapplication.databinding.ActivityMainPageBinding
 import com.example.diplomaapplication.model.views.CurrentUserViewModel
 import com.example.diplomaapplication.model.views.MainActivityViewModel
