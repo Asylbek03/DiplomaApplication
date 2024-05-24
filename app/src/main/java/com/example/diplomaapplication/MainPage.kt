@@ -118,7 +118,4 @@ class MainPage : AppCompatActivity() {
             super.onBackPressed()
         }
     }
-
-
-
 }

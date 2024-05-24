@@ -41,6 +41,7 @@
         <activity android:name=".views.WelcomeAuthFragment" />
         <activity android:name=".notification.NotificationResponseActivity" />
         <activity android:name=".ui.map.view.MapMainActivity" />
+        <activity android:name=".views.medicines.CameraFragment"/>
 
         <activity
             android:name=".MainActivity"
@@ -53,11 +54,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.canhub.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"
-            />
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
         <receiver android:name=".notification.MedicineAlarmReceiver"/>
+        <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="ocr"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

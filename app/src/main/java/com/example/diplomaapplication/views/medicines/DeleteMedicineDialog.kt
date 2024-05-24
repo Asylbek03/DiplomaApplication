@@ -7,7 +7,6 @@ import androidx.fragment.app.DialogFragment
 import com.example.diplomaapplication.databases.room_database.medicines_database.Medicine
 
 class DeleteMedicineDialog(private val medicine: Medicine, private val listener:DeleteMedicineInterface) : DialogFragment(){
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             AlertDialog.Builder(it).setMessage("Вы хотите удалить данное лекарство?")

@@ -1,5 +1,6 @@
 package com.example.diplomaapplication.ui.chat
 
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
@@ -114,13 +115,33 @@ class ChatsFragment : Fragment(), ChatInterface, DatabaseError {
                 }
 
                 binding.prescribeMedicineButton.setOnClickListener {
-                    if (currentUser?.isDoctor == true) {
-                        val dialogFragment = PrescriptionDialogFragment.newInstance(currentUserViewModel, requestViewModel, request)
-                        dialogFragment.show(childFragmentManager, "PrescriptionDialogFragment")
-                    } else {
-                        val dialogFragment = AddMedicineFragmentChat.newInstance(currentUserViewModel, requestViewModel, request)
-                        dialogFragment.show(childFragmentManager, "AddMedicineFragmentChat")
-                    }
+                    val options = arrayOf("Фото", "Лекарство", "Спросить у ИИ")
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setTitle("Выберите опцию")
+                        .setItems(options) { dialog, which ->
+                            when (which) {
+                                0 -> {
+                                    // Действие для опции "Фото"
+                                    // Здесь вы можете запустить процесс получения фотографии
+                                }
+                                1 -> {
+                                    // Действие для опции "Лекарство"
+                                    if (currentUser?.isDoctor == true) {
+                                        val dialogFragment = PrescriptionDialogFragment.newInstance(currentUserViewModel, requestViewModel, request)
+                                        dialogFragment.show(childFragmentManager, "PrescriptionDialogFragment")
+                                    } else {
+                                        val dialogFragment = AddMedicineFragmentChat.newInstance(currentUserViewModel, requestViewModel, request)
+                                        dialogFragment.show(childFragmentManager, "AddMedicineFragmentChat")
+                                    }
+                                }
+                                2 -> {
+                                    val askChatGPTDialog = AskChatGPTFragment.newInstance(currentUserViewModel, requestViewModel, request)
+                                    askChatGPTDialog.show(childFragmentManager, "AskChatGPT")
+                                }
+                            }
+                        }
+                    val dialog = builder.create()
+                    dialog.show()
                 }
 
                 if(currentUser!!.isDoctor){

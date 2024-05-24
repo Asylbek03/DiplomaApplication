@@ -2,6 +2,7 @@ package com.example.diplomaapplication.ui.map.view
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -25,13 +26,10 @@ import java.util.*
 
 class MapMainActivity : Fragment(), PopupMenu.OnMenuItemClickListener {
 
-    // View Model
     private val mapViewModel: MapViewModel by viewModels()
 
-    // Permissions
     private val PERMISSION_REQUEST_CODE: Int = 555
 
-    // View Data
     private var worshipType: WorshipType = WorshipType.ALL
 
     private val mapFragment = MapFragment()
@@ -68,7 +66,6 @@ class MapMainActivity : Fragment(), PopupMenu.OnMenuItemClickListener {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        //default
         worshipTypeButton.setImageResource(R.drawable.ic_add)
 
         worshipTypeButton.setOnClickListener {
@@ -77,15 +74,22 @@ class MapMainActivity : Fragment(), PopupMenu.OnMenuItemClickListener {
             popupMenu.setOnMenuItemClickListener(this)
             popupMenu.show()
         }
+        mapViewModel.curLocation.observe(viewLifecycleOwner) { location ->
+            if (location != null) {
+                Log.d("TAG_X", "Current location observed -> LAT: ${location.latitude}, LONG: ${location.longitude}")
+                searchButton.isEnabled = true
+            }
+        }
 
         searchButton.setOnClickListener {
-            mapViewModel.curLocation.let {
+            mapViewModel.curLocation.value?.let {
+                Log.d("TAG_X", "Search button clicked with location: ${it.latitude}, ${it.longitude}")
                 mapViewModel.updateDetailsEnabled(false)
                 mapViewModel.getNearbyPlaces(
                     radiusSeekBar.progress.toString().trim(),
                     worshipType.toString().toLowerCase(Locale.ROOT)
                 )
-            }
+            } ?: Log.e("TAG_X", "Current location is not initialized on search button click")
         }
 
         mapViewModel.shouldDisplayDetails.observe(viewLifecycleOwner) { enabled ->

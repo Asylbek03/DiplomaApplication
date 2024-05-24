@@ -25,7 +25,7 @@ class LoginFragment : Fragment() {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val signInButton = view.findViewById<Button>(R.id.signInButton)
@@ -54,7 +54,6 @@ class LoginFragment : Fragment() {
             requireView()
         )
     }
-
 
     private fun onEnterClicked(){
         Helpers().keyboardEnterButtonClick(binding.loginPasswordInput){

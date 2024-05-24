@@ -133,6 +133,9 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_clearMedicine)
         }
 
+        binding.btnSetInfo.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_setInfo)
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()

@@ -49,7 +49,7 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
     private lateinit var intakeTimingSpinner: Spinner
     private lateinit var customDescriptionEditText: EditText
     private lateinit var intakeTimingAdapter: ArrayAdapter<String>
-    private val units = arrayOf("таблетки", "ml", "mg")
+    private val units = arrayOf("таблетки", "мл", "мг")
     private var selectedMedicineType: String = ""
 
     private val pendingIntentsMap = HashMap<Int, PendingIntent>()
@@ -276,7 +276,7 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
 
                 requireActivity().onBackPressed()
             } else {
-                helpers.showSnackBar("Cannot save medicine with a date that has already passed.", requireView())
+                helpers.showSnackBar("Невозможно сохранить лекарство, дата которого уже прошла.", requireView())
             }
         } catch (ex: Exception) {
             Log.d("TAG", ex.toString())
@@ -294,11 +294,8 @@ class AddMedicineFragment : Fragment(), MedicineFormInterface {
     }
 
     private fun openCameraFragment() {
-        //val cameraFragment = CameraFragment()
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        //transaction.replace(R.id.addMedicineFragment, cameraFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        val intent = Intent(requireContext(), CameraFragment::class.java)
+        startActivity(intent)
     }
 
     fun updateMedicineName(medicineName: String) {

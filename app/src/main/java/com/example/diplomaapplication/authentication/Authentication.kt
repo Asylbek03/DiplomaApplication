@@ -15,10 +15,8 @@ import java.lang.Exception
 class Authentication: DatabaseError {
 
     private val auth = FirebaseAuth.getInstance()
-
     private val firestore = FirebaseFirestore.getInstance()
     private val database = FireStoreDatabase()
-
     private val helpers: Helpers = Helpers()
 
     fun registerWithEmailAndPassword(email: String, password: String,view: View,user: User) {

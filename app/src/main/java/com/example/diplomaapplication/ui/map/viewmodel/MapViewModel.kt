@@ -1,6 +1,7 @@
 package com.example.diplomaapplication.ui.map.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -12,11 +13,12 @@ import com.example.diplomaapplication.ui.map.network.GooglePlacesRetrofit
 import com.example.diplomaapplication.ui.map.util.NetworkConstants
 import com.example.diplomaapplication.ui.map.util.SearchConstants
 import com.example.diplomaapplication.ui.map.util.WorshipType
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-
+import java.util.Locale
 
 class MapViewModel : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
@@ -25,15 +27,14 @@ class MapViewModel : ViewModel() {
     val geocodeResults: MutableLiveData<Geocode> = MutableLiveData()
     val placeDetailsResults: MutableLiveData<PlaceDetails> = MutableLiveData()
 
-    var curLocation: LatLng = LatLng(37.4219983,-122.084)
+    private val _curLocation: MutableLiveData<LatLng> = MutableLiveData()
+    val curLocation: LiveData<LatLng>
+        get() = _curLocation
 
     val shouldDisplayDetails: MutableLiveData<Boolean> = MutableLiveData(false)
     var selectedPlaceId: String = ""
     var selectedPlaceName: String = ""
     var selectedPlaceIconId: Int = R.drawable.worship_general_71
-
-//    private lateinit var nextPageToken: String
-//    val placeIndexMap: HashMap<String, MutableList<Int>> = hashMapOf()
 
     fun requestNearbyPlaces(queryMap: Map<String, String>) {
         compositeDisposable.add(
@@ -53,85 +54,90 @@ class MapViewModel : ViewModel() {
     }
 
     fun requestGeocodeData(queryMap: Map<String, String>) {
-//        Log.d("TAG_X", "requesting geocode data")
         compositeDisposable.add(
             GooglePlacesRetrofit.getGeocodeData(queryMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-
                     if (it.status == "OK") {
                         geocodeResults.postValue(it)
-                        // TODO: (bonus) send it.searchResults to db for offline use
                     } else {
                         Log.e("TAG_X", "geocode request status -> ${it.status}")
                         Log.e("TAG_X", "geocode request error -> ${it.error}")
                     }
-
                     compositeDisposable.clear()
-
-                }, {    // Throwable Exception...
+                }, {
                     Log.e("TAG_X", "geocode exception -> ${it.localizedMessage}")
                 })
         )
     }
 
     fun requestPlaceDetails(queryMap: Map<String, String>) {
-        Log.d("TAG_X", "requesting place details")
         compositeDisposable.add(
             GooglePlacesRetrofit.getPlaceDetails(queryMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-
                     if (it.status == "OK") {
                         placeDetailsResults.postValue(it)
-                        // TODO: (bonus) send it.searchResults to db for offline use
                     } else {
                         Log.e("TAG_X", "place details request status -> ${it.status}")
                         Log.e("TAG_X", "place details request error -> ${it.error}")
                     }
-
                     compositeDisposable.clear()
-
-                }, {    // Throwable Exception...
+                }, {
                     Log.e("TAG_X", "place details exception -> ${it.localizedMessage}")
                 })
         )
     }
 
     fun updateLocation(location: LatLng) {
-        curLocation = location
+        _curLocation.postValue(location)
+        Log.d("TAG_X", "Updated location -> LAT: ${location.latitude}, LONG: ${location.longitude}")
     }
 
     fun getNearbyPlaces(radius: String, placeType: String = "") {
-//        Log.d("TAG_X", "radius: $radius, place type: $placeType")
+        val currentLocation = _curLocation.value
+
+        if (currentLocation == null) {
+            Log.e("TAG_X", "Current location is not initialized in getNearbyPlaces")
+            return
+        }
 
         var type = placeType
         var keywords = ""
 
-        when (placeType) {
-            WorshipType.OTHERS.toString().toLowerCase() -> {
+        val nearbyPlacesQueryMap: MutableMap<String, String> = mutableMapOf(
+            "location" to "${currentLocation.latitude},${currentLocation.longitude}",
+            "radius" to radius,
+            "key" to NetworkConstants.KEY_VALUE
+        )
+        if (placeType.isNotEmpty())
+            nearbyPlacesQueryMap["type"] = placeType
+
+        requestNearbyPlaces(nearbyPlacesQueryMap)
+
+        when (placeType.toLowerCase(Locale.ROOT)) {
+            WorshipType.OTHERS.toString().toLowerCase(Locale.ROOT) -> {
                 type = ""
                 keywords = SearchConstants.OTHER_SEARCH_KEYWORDS
             }
-            WorshipType.ALL.toString().toLowerCase() -> {
+            WorshipType.ALL.toString().toLowerCase(Locale.ROOT) -> {
                 type = ""
-                keywords = SearchConstants.ALL_SEARCH_PREFIX + "|" +
-                        SearchConstants.OTHER_SEARCH_KEYWORDS
+                keywords = SearchConstants.ALL_SEARCH_PREFIX + "|" + SearchConstants.OTHER_SEARCH_KEYWORDS
             }
         }
 
         val queryMap = mapOf(
             NetworkConstants.KEY_KEY to NetworkConstants.KEY_VALUE,
-            NetworkConstants.LOCATION_KEY to "${curLocation.latitude},${curLocation.longitude}",
+            NetworkConstants.LOCATION_KEY to "${currentLocation.latitude},${currentLocation.longitude}",
             NetworkConstants.RADIUS_KEY to radius,
             NetworkConstants.TYPE_KEY to type,
             NetworkConstants.KEYWORD_KEY to keywords
         )
 
         requestNearbyPlaces(queryMap)
-        Log.d("TAG_X", "$queryMap")
+        Log.d("TAG_X", "Query map: $queryMap")
     }
 
     fun updateDetailsEnabled(enabled: Boolean) {

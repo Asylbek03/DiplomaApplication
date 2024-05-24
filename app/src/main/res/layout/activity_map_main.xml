@@ -22,7 +22,7 @@
         android:id="@+id/search_radius_seekbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:max="5000"
+        android:max="1500"
         android:progress="100"
         android:layout_marginHorizontal="4dp"
         android:layout_marginBottom="8dp"

@@ -85,6 +85,8 @@
     <string name="open_app_settings_button">Открыть настройки</string>
     <string name="choose_img">Сделайте снимок или выберите фото из галереи</string>
     <string name="copy_text">Скопировать текст</string>
+    <string name="change_info">Личные данные</string>
+    <string name="title_info">Личные данные</string>
 
     <plurals name="numberOfSongsAvailable">
         <item quantity="one">%d неделя</item>

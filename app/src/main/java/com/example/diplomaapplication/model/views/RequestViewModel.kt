@@ -14,5 +14,4 @@ class RequestViewModel : ViewModel(){
     }
 
     fun getRequest(): LiveData<String> = requestId
-
 }

@@ -14,7 +14,6 @@ class MedicinesViewModel(application: Application) : AndroidViewModel(applicatio
         .medicineDao())
     val allMedicines: LiveData<List<Medicine>> = repository.allMedicines
 
-    // Define newMedicine as MutableLiveData
     private val _newMedicine = MutableLiveData<Medicine>()
     val newMedicine: LiveData<Medicine>
         get() = _newMedicine
@@ -59,7 +58,6 @@ class MedicinesViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getMedicinesForPeriod(startTime, endTime)
     }
 
-    // Set the value of newMedicine
     fun setNewMedicine(medicine: Medicine) {
         _newMedicine.value = medicine
     }

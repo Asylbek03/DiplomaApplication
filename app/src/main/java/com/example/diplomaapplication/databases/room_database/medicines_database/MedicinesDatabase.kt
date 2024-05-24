@@ -9,7 +9,6 @@ import androidx.room.RoomDatabase
 abstract class MedicinesDatabase : RoomDatabase() {
 
     abstract fun medicineDao(): MedicineDao
-
     companion object {
         @Volatile
         private var instance: MedicinesDatabase? = null
@@ -31,10 +30,8 @@ abstract class MedicinesDatabase : RoomDatabase() {
             ).fallbackToDestructiveMigration().build()
         }
 
-
         fun clearDatabase(context: Context) {
             getDatabase(context).clearAllTables()
         }
     }
-
 }

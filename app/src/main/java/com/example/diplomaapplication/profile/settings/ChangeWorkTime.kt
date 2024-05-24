@@ -36,8 +36,17 @@ class ChangeWorkTime : Fragment(), DatabaseError {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerTimeViewModel = ViewModelProvider(requireActivity()).get(RegisterTimeViewModel::class.java)
-        user = User(System.currentTimeMillis().toString(),"Name","A doctor", R.drawable.avatar_doctor_1, true, " " , System.currentTimeMillis(), System.currentTimeMillis(),0.0f)
-
+        user = User(
+            id = System.currentTimeMillis().toString(),
+            firstName = "Name",
+            bio = if (user.isDoctor) "A Doctor" else "A patient",
+            avatar = if (user.isDoctor) R.drawable.avatar_doctor_1 else R.drawable.avatar_user_1,
+            isDoctor = true,
+            medicineBranch = " ",
+            startTime = System.currentTimeMillis(),
+            endTime = System.currentTimeMillis(),
+            starCount = 0.0f
+        )
         currentUserViewModel = ViewModelProvider(requireActivity()).get(CurrentUserViewModel::class.java)
         binding.startTimeInput.setOnClickListener {
             val dialog = RegisterTimePickerDialog(true)

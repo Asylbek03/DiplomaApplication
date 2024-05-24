@@ -1,9 +1,7 @@
 package com.example.diplomaapplication.ui.map.view
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -14,34 +12,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.diplomaapplication.R
 import com.example.diplomaapplication.ui.map.model.NearbyPlaces
 import com.example.diplomaapplication.ui.map.util.NetworkConstants
-import com.example.diplomaapplication.ui.map.util.SearchConstants
 import com.example.diplomaapplication.ui.map.util.WorshipType
 import com.example.diplomaapplication.ui.map.viewmodel.MapViewModel
-import com.example.diplomaapplication.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.*
-import java.util.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import java.util.Locale
 
-class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
-    GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraMoveListener {
+class MapFragment : Fragment(), LocationListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraMoveListener {
 
-    // View Model
     private val mapViewModel: MapViewModel by activityViewModels()
-
-    // Location Polling
     private lateinit var locationManager: LocationManager
-    private lateinit var curLocation: LatLng
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var currentLocation: Location
-
-    // Map
     private lateinit var gmap: GoogleMap
     private val markers: MutableList<Marker> = mutableListOf()
     private lateinit var selectedMarker: Marker
@@ -51,30 +45,25 @@ class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.map_fragment_layout, container, false)
-
+    ): View? = inflater.inflate(R.layout.map_fragment_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         locationManager = view.context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        curLocation = LatLng(37.4219983, -122.084)
-
         val mapFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
         mapViewModel.nearbyPlaceResults.observe(viewLifecycleOwner) {
             if (this::gmap.isInitialized)
                 it.searchResults?.let { results ->
-                    Log.d("TAG_X", "result in")
+                    Log.d("TAG_X", "Result received")
                     placeNearbyMarkers(results)
                 }
         }
     }
 
     @SuppressLint("MissingPermission")
-    // Map will not even load without this permission, check not needed
     private fun enableLocationPolling(enabled: Boolean) {
         if (enabled)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000L, 100f, this)
@@ -83,17 +72,12 @@ class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
     }
 
     override fun onLocationChanged(location: Location) {
-//        Log.d("TAG_X", "current location -> LAT: ${location.latitude}, LONG: ${location.longitude}")
+        Log.d("TAG_X", "current location -> LAT: ${location.latitude}, LONG: ${location.longitude}")
         val newLocation = LatLng(location.latitude, location.longitude)
-        if (this::curLocation.isInitialized)
-            if (newLocation == curLocation)
-                return
 
-        curLocation = newLocation
-        mapViewModel.updateLocation(curLocation)
-
+        mapViewModel.updateLocation(newLocation)
         if (this::gmap.isInitialized) {
-            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(curLocation, curZoom))
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, curZoom))
         }
     }
 
@@ -103,12 +87,12 @@ class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
             customizeMap()
             enableLocationPolling(true)
         }
-        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(curLocation, DEFAULT_ZOOM.toFloat()))
-
     }
+
     companion object {
         private const val DEFAULT_ZOOM = 15
     }
+
     override fun onStop() {
         super.onStop()
         enableLocationPolling(false)
@@ -118,7 +102,6 @@ class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
     private fun customizeMap() {
         gmap.setMaxZoomPreference(17f)
         gmap.setMinZoomPreference(7f)
-//        gmap.uiSettings.isZoomControlsEnabled = true
         gmap.uiSettings.isCompassEnabled = true
         gmap.isMyLocationEnabled = true
         gmap.uiSettings.isMyLocationButtonEnabled = true
@@ -135,31 +118,35 @@ class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
         }
 
         for (place in placesList) {
-            val latLng = LatLng(place.geometry?.location?.lat ?: 0.0, place.geometry?.location?.lng ?: 0.0)
-            val markerOptions = MarkerOptions().position(latLng).title(place.name)
+            val lat = place.geometry?.location?.lat ?: 0.0
+            val lng = place.geometry?.location?.lng ?: 0.0
 
-            val iconId = when {
-                place.types?.contains(WorshipType.MOSQUE.toString().toLowerCase(Locale.ROOT)) == true -> R.drawable.islam
-                place.types?.contains(WorshipType.PHARMACY.toString().toLowerCase(Locale.ROOT)) == true -> R.drawable.icon_pharmacy
-                place.types?.contains(WorshipType.HOSPITAL.toString().toLowerCase(Locale.ROOT)) == true -> R.drawable.icon_hospital
-                else -> R.drawable.worship_general_71
-            }
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap(iconId, 100, 100)))
+            val mark = gmap.addMarker(
+                MarkerOptions()
+                    .position(LatLng(lat, lng))
+                    .title(place.name)
+            )
 
-            val marker = gmap.addMarker(markerOptions)
-            if (marker != null) {
-                marker.tag = "${place.place_id}:$iconId"
-                markers.add(marker)
+            var iconId: Int = R.drawable.worship_general_71
+
+            place.types?.let { type ->
+                iconId = when {
+                    type.contains(WorshipType.MOSQUE.toString().toLowerCase(Locale.ROOT)) -> R.drawable.islam
+                    type.contains(WorshipType.PHARMACY.toString().toLowerCase(Locale.ROOT)) -> R.drawable.icon_hospital
+                    type.contains(WorshipType.HOSPITAL.toString().toLowerCase(Locale.ROOT)) -> R.drawable.icon_pharmacy
+                    else -> R.drawable.worship_general_71
+                }
             }
+
+            mark?.setIcon(BitmapDescriptorFactory.fromBitmap(resizeBitmap(iconId, 100, 100)))
+            mark?.tag = place.place_id + ":" + iconId
+            markers.add(mark!!)
         }
     }
 
-
-
     fun resizeBitmap(iconId: Int, width: Int, height: Int): Bitmap {
-        val imageBitamp = BitmapFactory.decodeResource(resources, iconId)
-        val resizedBitmap = Bitmap.createScaledBitmap(imageBitamp, width, height, false)
-        return resizedBitmap
+        val imageBitmap = BitmapFactory.decodeResource(resources, iconId)
+        return Bitmap.createScaledBitmap(imageBitmap, width, height, false)
     }
 
     private fun removeAllMarkers() {
@@ -173,9 +160,7 @@ class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
             selectedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
                 resizeBitmap(mapViewModel.selectedPlaceIconId, 100, 100)))
 
-        p0.let { selectedMarker = it }
-
-//        Log.d("TAG_X", marker?.tag.toString())
+        selectedMarker = p0
 
         val tagData = p0.tag.toString().split(":")
 
@@ -192,8 +177,6 @@ class MapFragment : Fragment(), LocationListener, OnMapReadyCallback,
         selectedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
             resizeBitmap(mapViewModel.selectedPlaceIconId, 175, 175)))
 
-        // does not consume this function
-        // allows default behavior to run after this
         return false
     }
 

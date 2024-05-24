@@ -47,8 +47,6 @@ interface MedicineDao {
     suspend fun getMedicineIdByName(medicineName: String, currentTimeMillis: Long = System.currentTimeMillis()): Int?
 
 
-
-
     @Dao
     interface DatabaseDao {
         @Query("DELETE FROM sqlite_sequence")

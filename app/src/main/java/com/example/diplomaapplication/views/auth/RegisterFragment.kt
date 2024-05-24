@@ -40,8 +40,17 @@ class RegisterFragment : Fragment() {
 
         registerTimeViewModel = ViewModelProvider(requireActivity()).get(RegisterTimeViewModel::class.java)
 
-        user = User(System.currentTimeMillis().toString(),"Name","A doctor", R.drawable.avatar_doctor_1, true, " " , System.currentTimeMillis(), System.currentTimeMillis(),0.0f)
-
+        user = User(
+            id = System.currentTimeMillis().toString(),
+            firstName = "Name",
+            bio = "A Doctor",
+            avatar = R.drawable.avatar_doctor_1,
+            isDoctor = true,
+            medicineBranch = " ",
+            startTime = System.currentTimeMillis(),
+            endTime = System.currentTimeMillis(),
+            starCount = 0.0f
+        )
         setupNavigation()
         binding.registerButton.setOnClickListener { registerWithEmailAndPassword() }
         onEnterClicked()
