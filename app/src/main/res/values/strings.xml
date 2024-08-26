@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DiplomaApplication</string>
     <string name="web_client_id">949341414904-qgv08qjm0fs6bod7fpiou63lo07mg3qb.apps.googleusercontent.com</string>
-    <string name="google_maps_key">AIzaSyAEkbsprYryRT_Kpb3m0cdGada5kmR2m8o</string>
+    <string name="google_maps_key"></string>
     <string name="menu_home">Главная</string>
     <string name="title_activity_main_page">Главная</string>
     <string name="title_home">Главная</string>
